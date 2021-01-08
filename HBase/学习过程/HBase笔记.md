@@ -290,7 +290,25 @@ java_heapsize × hbase.regionserver.global.memstore.size（默认值0.4）时，
 
 6、将合并后的最终结果返回给客户端。
 
+## 3.5、StoreFile Compaction
 
+​	由于memstore每次刷写都会生成一个新的HFile，且同一个字段的不同版本（timestmap）和不同类型（Put/Delete）有可能分布在不同的HFile中。因此查询时候需要遍历所有的HFile。为了减少HFile的个数，以及清理过期和删除的数据，会进行StoreFile Compaction。
+
+​	Compaction分为两种，分别是Minor Compaction和Major Compaction。Minor Compaction会将接近的、若干较小的HFile合并为一个较大的HFile，但不会清理过期和删除的数据。
+
+​	Major Compaction会将一个Store下的所有HFile合并为一个大HFile，并清理掉过期和删除的数据。
+
+![](/home/yzf/IdeaProjects/Bigdata/HBase/学习过程/img/StoreFile Compaction.png)
+
+## 3.6、Region Split
+
+​	默认情况下，每个Table起初只有一个Region，随着数据的不断写入，Region会自动进行拆分。刚拆分时，两个子Region都位于当前的Region Server，但处于负载均衡的考虑，HMaster有可能会将某个Region转移给其他的Region Server。
+
+​	Region Split的时机：
+
+​    1、当1个Region中的某个Store下所有StoreFile的总大小超过hbase.hregion.max.filesize，该Region就会进行拆分。
+
+​	2、当1个Region中的某个Store下的所有StoreFile的总大小超过Min(R^2 * "hbase.hregion.memstore.flush.size",hbase.hregion.max.filesize)，该Region就会进行切分，其中R为当前Region Server中属于该Table的个数。
 
 # N资料
 
