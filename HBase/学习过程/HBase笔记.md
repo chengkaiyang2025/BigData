@@ -198,8 +198,6 @@ get 'stu2','1001',{COLUMN=>'info1:name',VERSIONS=>4}
 
 ​	HBase中的version版本号按照{rowkey:column family:column quailify:timestamp}中的timestamp来定义，本着FIFO的队列原则，当VERSIONS为3的时候，表示只保留三个版本的历史数据。
 
-
-
 # 第三章、HBase进阶
 
 ## 3.1、架构原理
@@ -284,9 +282,9 @@ java_heapsize × hbase.regionserver.global.memstore.size（默认值0.4）时，
 
 3、与Region Server进行通讯。
 
-4、分别在Block Cache、MemStore、StoreFile中查询目标，并将查到的所有数据进行合并，此处所有数据是指同一条数据的不同版本或者不同的类型。
+4、分别在Block Cache、MemStore、StoreFile中查询目标，并将查到的所有数据进行合并，此处所有数据是指同一条数据的不同版本或者不同的类型，因为有时间戳。
 
-5、将从文件中查询的数据块（Block，HFile数据存储单元）缓存到Block Cache。
+5、将从文件中查询的数据块（Block，HFile数据存储单元）缓存到Block Cache，为了更快。
 
 6、将合并后的最终结果返回给客户端。
 
@@ -294,27 +292,63 @@ java_heapsize × hbase.regionserver.global.memstore.size（默认值0.4）时，
 
 ​	由于memstore每次刷写都会生成一个新的HFile，且同一个字段的不同版本（timestmap）和不同类型（Put/Delete）有可能分布在不同的HFile中。因此查询时候需要遍历所有的HFile。为了减少HFile的个数，以及清理过期和删除的数据，会进行StoreFile Compaction。
 
-​	Compaction分为两种，分别是Minor Compaction和Major Compaction。Minor Compaction会将接近的、若干较小的HFile合并为一个较大的HFile，但不会清理过期和删除的数据。
+​	Compaction分为两种，分别是Minor Compaction（compact命令）和Major Compaction（major_compact命令）。
 
-​	Major Compaction会将一个Store下的所有HFile合并为一个大HFile，并清理掉过期和删除的数据。
+​	Minor Compaction会将接近的、若干较小的HFile合并为一个较大的HFile，但不会清理过期和删除的数据。
+
+​	体现在compact命令上，会表现出如果当前列族的Store下的HFile大于三3个（hbase.hstore.compactionThreshold），也就是memstore刷了3次，会触发一次minor compaction。如果使用compact则手动触发合并。
+
+​	Major Compaction会将一个Store下的所有HFile合并为一个大HFile，并**清理掉过期和删除**的数据。hbase.hregion.majorcompaction生产上建议为0,防止有较大的抖动。
 
 ![](/home/yzf/IdeaProjects/Bigdata/HBase/学习过程/img/StoreFile Compaction.png)
 
 ## 3.6、Region Split
 
-​	默认情况下，每个Table起初只有一个Region，随着数据的不断写入，Region会自动进行拆分。刚拆分时，两个子Region都位于当前的Region Server，但处于负载均衡的考虑，HMaster有可能会将某个Region转移给其他的Region Server。
+​	默认情况下，每个Table起初只有一个Region，随着数据的不断写入，Region会自动进行拆分。刚拆分时，两个子Region都位于当前的Region Server，但处于负载均衡的考虑，**HMaster有可能会将某个Region转移给其他的Region Server**。
 
 ​	Region Split的时机：
 
-​    1、当1个Region中的某个Store下所有StoreFile的总大小超过hbase.hregion.max.filesize，该Region就会进行拆分。
+​    1、老版本：当1个Region中的某个Store下所有StoreFile的总大小超过**hbase.hregion.max.filesize**，默认10个G，该Region就会进行拆分。一分为二
 
-​	2、当1个Region中的某个Store下的所有StoreFile的总大小超过Min(R^2 * "hbase.hregion.memstore.flush.size",hbase.hregion.max.filesize)，该Region就会进行切分，其中R为当前Region Server中属于该Table的个数。
+​	2、新版本0.94以后：当1个Region中的某个Store下的所有StoreFile的总大小超过Min(R^2 * "hbase.hregion.memstore.flush.size",hbase.hregion.max.filesize)，该Region就会进行切分，其中R为当前Region Server中属于该Table的个数。
+
+![](/home/yzf/IdeaProjects/Bigdata/HBase/学习过程/img/Split.png)
+
+
+
+# HBase数据迁移到Hive
+
+1、二级索引。不太适用，因为查询条件不会集中在几个。
+
+2、T+1。使用Timestamp?
+
+​	使用hive复制
+
+You can create map hbase table into Hive as in below link
+
+https://cwiki.apache.org/confluence/display/Hive/HBaseIntegration
+
+  then use Export/Import feature to replicate data.
+
+https://cwiki.apache.org/confluence/display/Hive/LanguageManual+ImportExport
+
+3、NIFI
+
+
 
 # N资料
 
 关于HBase的书，HBase原理与实践，HBasePMC出品的书，在过完尚硅谷的教程、SpringBoot与HBase的集成之后，可以看这本书。
 
 https://book.douban.com/subject/34819650/
+
+Google的BigTable论文
+
+https://research.google/pubs/pub27898/
+
+https://storage.googleapis.com/pub-tools-public-publication-data/pdf/68a74a85e1662fe02ff3967497f31fda7f32225c.pdf
+
+
 
 
 
