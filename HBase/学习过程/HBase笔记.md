@@ -316,6 +316,28 @@ java_heapsize × hbase.regionserver.global.memstore.size（默认值0.4）时，
 
 
 
+# 第四章、HBase API
+
+## 4.1、环境准备
+
+HBase的
+
+
+
+https://docs.cloudera.com/cdp-private-cloud-base/7.1.3/accessing-hbase/topics/hbase-use-the-java-api.html
+
+## 4.2、HBase API
+
+## 4.3、MapReduce
+
+
+
+
+
+
+
+
+
 # HBase数据迁移到Hive
 
 1、二级索引。不太适用，因为查询条件不会集中在几个。
