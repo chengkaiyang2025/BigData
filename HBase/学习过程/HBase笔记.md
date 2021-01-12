@@ -322,11 +322,17 @@ java_heapsize × hbase.regionserver.global.memstore.size（默认值0.4）时，
 
 HBase的
 
-
-
 https://docs.cloudera.com/cdp-private-cloud-base/7.1.3/accessing-hbase/topics/hbase-use-the-java-api.html
 
+
+
 ## 4.2、HBase API
+
+HBase与Spring集成，采用spring-boot hadoop技术栈，官方文档中为xml的方式，这个是通过注解方式进行配置：
+
+https://www.jianshu.com/p/16e9894f5035
+
+
 
 ## 4.3、MapReduce
 
