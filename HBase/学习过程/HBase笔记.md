@@ -12,13 +12,13 @@
 
 ### 1.2.1、HBase逻辑模型
 
-![](/home/yzf/IdeaProjects/Bigdata/HBase/学习过程/img/Hbase逻辑架构.png)
+![](img/Hbase逻辑架构.png)
 
 
 
 ### 1.2.2、HBase物理存储结构
 
-![](/home/yzf/IdeaProjects/Bigdata/HBase/学习过程/img/HBase数据模型.png)
+![](img/HBase数据模型.png)
 
 ### 1.2.3、数据模型
 
@@ -50,7 +50,7 @@
 
 ## 1.3、HBase基本架构（不完整版本）
 
-![](/home/yzf/IdeaProjects/Bigdata/HBase/学习过程/img/简单的架构.png)
+![](img/简单的架构.png)
 
 架构角色，其中表存储在一个或多个Region中。一个CF存储在一个Store中。
 
@@ -204,7 +204,7 @@ get 'stu2','1001',{COLUMN=>'info1:name',VERSIONS=>4}
 
 
 
-![](/home/yzf/IdeaProjects/Bigdata/HBase/学习过程/img/HBase详细架构图.png)
+![](img/HBase详细架构图.png)
 
 1、StoreFile
 
@@ -228,7 +228,7 @@ get 'stu2','1001',{COLUMN=>'info1:name',VERSIONS=>4}
 
 ## 3.2、写原理
 
-![](/home/yzf/IdeaProjects/Bigdata/HBase/学习过程/img/HBase写流程.png)
+![](img/HBase写流程.png)
 
 写流程
 
@@ -250,7 +250,7 @@ get 'stu2','1001',{COLUMN=>'info1:name',VERSIONS=>4}
 
 ## 3.3、MemStore Flush
 
-![](/home/yzf/IdeaProjects/Bigdata/HBase/学习过程/img/HBase刷新memstore过程.png)
+![](img/HBase刷新memstore过程.png)
 
 MemStore刷写时机：
 
@@ -274,7 +274,7 @@ java_heapsize × hbase.regionserver.global.memstore.size（默认值0.4）时，
 
 ## 3.4、读流程
 
-![](/home/yzf/IdeaProjects/Bigdata/HBase/学习过程/img/HBase读流程.png) 
+![](img/HBase读流程.png) 
 
 1、Client先访问zookeeper，获取hbase:meta表位于哪个RegionServer。
 
@@ -300,7 +300,7 @@ java_heapsize × hbase.regionserver.global.memstore.size（默认值0.4）时，
 
 ​	Major Compaction会将一个Store下的所有HFile合并为一个大HFile，并**清理掉过期和删除**的数据。hbase.hregion.majorcompaction生产上建议为0,防止有较大的抖动。
 
-![](/home/yzf/IdeaProjects/Bigdata/HBase/学习过程/img/StoreFile Compaction.png)
+![](img/StoreFile Compaction.png)
 
 ## 3.6、Region Split
 
@@ -312,7 +312,7 @@ java_heapsize × hbase.regionserver.global.memstore.size（默认值0.4）时，
 
 ​	2、新版本0.94以后：当1个Region中的某个Store下的所有StoreFile的总大小超过Min(R^2 * "hbase.hregion.memstore.flush.size",hbase.hregion.max.filesize)，该Region就会进行切分，其中R为当前Region Server中属于该Table的个数。
 
-![](/home/yzf/IdeaProjects/Bigdata/HBase/学习过程/img/Split.png)
+![](img/Split.png)
 
 
 
@@ -334,11 +334,72 @@ https://www.jianshu.com/p/16e9894f5035
 
 
 
-## 4.3、MapReduce
+## 4.3、MapReduce集成
+
+说明：这个部分涉及MapReduce相关的东西，由于还没有系统学习hadoop，因此先不记录笔记了。
+
+## 4.4、Hive集成
+
+说明：这个部分涉及Hive外部表的创建，也先不记录笔记了。
 
 
 
+# 第五章、HBase优化
 
+## 5.1、高可用
+
+说明：这部分内容一般使用CDH或者EMR进行统一管理。
+
+## 5.2、预分区
+
+每一个region维护一个StartRow与一个EndRow，如果加入的数据符合某个Region维护的Rowkey范围，则数据交给这个Region进行维护。因此有了预分区的概念，将预分区大致规划好，就能知道某个Rowkey落在哪个分区里面。
+
+预分区有如下几种方法：
+
+1、手动预先分区
+
+```shell
+> create 'staff1','info','partition1',SPLITS => ['1000', '2000', '3000', '4000']
+```
+
+2、生成16进制序列预分区
+
+```shell
+> create 'staff2', 'info', 'partition2', {NUMREGIONS => 15, SPLITALGO => 'HexStringSplit'}
+```
+
+3、按照文件中配置的规则进行预分区
+
+```shell
+aaa
+bbb
+ccc
+ddd
+```
+
+然后执行：
+
+```shell
+create 'staff3', 'partition3', SPLITS_FILES => 'splits.txt'
+```
+
+
+
+## 5.3、RowKey设计
+
+
+
+## 5.4、内存优化
+
+## 5.5、基础优化
+
+
+
+# 第六章、HBase实战之谷粒微博
+
+
+
+# 第七章、HBase与SpringBoot的集成
 
 
 
