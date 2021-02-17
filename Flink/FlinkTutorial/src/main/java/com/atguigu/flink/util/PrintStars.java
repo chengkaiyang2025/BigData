@@ -1,4 +1,4 @@
-package com.atguigu.flink.stream;
+package com.atguigu.flink.util;
 
 public class PrintStars {
     public static void main(String[] args) {
