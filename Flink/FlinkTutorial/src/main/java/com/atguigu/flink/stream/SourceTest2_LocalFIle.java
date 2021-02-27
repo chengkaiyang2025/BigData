@@ -11,7 +11,7 @@ public class SourceTest2_LocalFIle {
         env.setParallelism(1);
 
 
-        String filePath = "src/main/resources/sersor_reading.csv";
+        String filePath = "src/main/resources/sensor_reading.csv";
         DataStream<String> input = env.readTextFile(filePath);
         DataStream<SensorReading> sensorReadingDataStream = input.map(new MapFunction<String, SensorReading>() {
             @Override
