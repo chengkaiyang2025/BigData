@@ -7,7 +7,7 @@ import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 
-public class ReduceSensorReading {
+public class reduceSensorReading {
     public static void main(String[] args) throws Exception {
         // 获得数据源
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();

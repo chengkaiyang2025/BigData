@@ -7,7 +7,7 @@ import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.functions.co.CoMapFunction;
 
-public class ConnectSensorReading {
+public class connectSensorReading {
     public static void main(String[] args) throws Exception {
         // 读取两种传感器数据源
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
