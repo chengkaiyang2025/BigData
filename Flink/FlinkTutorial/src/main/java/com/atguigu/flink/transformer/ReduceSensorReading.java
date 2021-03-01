@@ -6,7 +6,6 @@ import org.apache.flink.api.common.functions.ReduceFunction;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
-import sun.management.Sensor;
 
 public class ReduceSensorReading {
     public static void main(String[] args) throws Exception {

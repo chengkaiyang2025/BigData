@@ -6,6 +6,11 @@ public class SensorReading {
     private String name;
     private Long timeStamp;
 
+    public SensorReading(String name, double tem) {
+        this.name = name;
+        this.tem = tem;
+    }
+
     @Override
     public String toString() {
         return "SensorReading{" +
