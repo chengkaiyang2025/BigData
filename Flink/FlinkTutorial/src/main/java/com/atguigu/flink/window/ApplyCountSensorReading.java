@@ -1,8 +1,11 @@
 package com.atguigu.flink.window;
 
 import com.atguigu.flink.beans.SensorReading;
+import org.apache.commons.collections.IteratorUtils;
 import org.apache.flink.api.java.tuple.Tuple;
+import org.apache.flink.api.java.tuple.Tuple3;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
+import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.functions.source.SourceFunction;
 import org.apache.flink.streaming.api.functions.windowing.ProcessWindowFunction;
@@ -10,7 +13,9 @@ import org.apache.flink.streaming.api.functions.windowing.WindowFunction;
 import org.apache.flink.streaming.api.windowing.assigners.TumblingProcessingTimeWindows;
 import org.apache.flink.streaming.api.windowing.time.Time;
 import org.apache.flink.streaming.api.windowing.windows.TimeWindow;
+import org.apache.flink.util.Collector;
 
+import java.util.List;
 import java.util.Random;
 
 public class ApplyCountSensorReading {
@@ -41,13 +46,29 @@ public class ApplyCountSensorReading {
         });
 
         source.print("随机生成");
-        source.keyBy("name")
-                .window(TumblingProcessingTimeWindows.of(Time.seconds(15)))
-                .apply(new WindowFunction<SensorReading, Tuple3<String,Long,Integer>, Tuple, TimeWindow>() {
+        SingleOutputStreamOperator<Tuple3<String, Long, Double>> name = source.keyBy("name")
+                .window(TumblingProcessingTimeWindows.of(Time.seconds(10)))
+                .apply(new WindowFunction<SensorReading, Tuple3<String, Long, Double>, Tuple, TimeWindow>() {
+                    @Override
+                    public void apply(Tuple tuple, TimeWindow timeWindow, Iterable<SensorReading> iterable, Collector<Tuple3<String, Long, Double>> collector) throws Exception {
+                        String s = tuple.toString();
+                        List<SensorReading> list = IteratorUtils.toList(iterable.iterator());
+                        Double sum = Double.valueOf(0);
+                        for (SensorReading sensorReading : list) {
+                            sum = sum + sensorReading.getTem();
+                        }
+                        double avg = sum / list.size();
+                        long end = timeWindow.getEnd();
+                        System.out.println(avg);
+                        collector.collect(new Tuple3<>(s, end, avg));
+                    }
+                });
 
-                })
-
-
+        name.print("平均数");
         env.execute();
     }
 }
+
+
+
+
