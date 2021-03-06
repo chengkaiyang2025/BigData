@@ -21,7 +21,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
-public class ApplyCountSensorReading {
+public class ApplyAvgTimeWindowSensorReading {
     public static void main(String[] args) throws Exception {
         // 使用全窗口函数计算个数/平均温度
         StreamExecutionEnvironment env =  StreamExecutionEnvironment.getExecutionEnvironment();
