@@ -12,7 +12,7 @@ public class reduceSensorReading {
         // 获得数据源
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(1);
-        String file = "src/main/resources/sensor_reading.csv";
+        String file = "src/main/resources/sensor_reading_cold.csv";
         DataStreamSource<String> stringDataStreamSource = env.readTextFile(file);
         // 比较获得当前最大值
         SingleOutputStreamOperator<SensorReading> name = stringDataStreamSource.map(new MapFunction<String, SensorReading>() {

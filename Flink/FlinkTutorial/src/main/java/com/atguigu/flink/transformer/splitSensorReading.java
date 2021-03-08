@@ -15,7 +15,7 @@ public class splitSensorReading {
         // 读取数据源
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(1);
-        String file = "src/main/resources/sensor_reading.csv";
+        String file = "src/main/resources/sensor_reading_cold.csv";
         DataStreamSource<String> streamSource = env.readTextFile(file);
         // 按照30度进行分流
         SplitStream<SensorReading> split = streamSource.map(new MapFunction<String, SensorReading>() {

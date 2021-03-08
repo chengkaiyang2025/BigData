@@ -14,7 +14,7 @@ public class keyByMinSensorReading {
         //读取文件数据源
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(1);
-        String file = "src/main/resources/sensor_reading.csv";
+        String file = "src/main/resources/sensor_reading_cold.csv";
         DataStreamSource<String> stringDataStreamSource = env.readTextFile(file);
 
         //转为pojo类

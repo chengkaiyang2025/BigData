@@ -11,7 +11,7 @@ public class mapSensorReading {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         // 从文件中读取数据
         env.setParallelism(1);
-        String filepath = "src/main/resources/sensor_reading.csv";
+        String filepath = "src/main/resources/sensor_reading_cold.csv";
         DataStream<String> dataStream = env.readTextFile(filepath);
         // 计算每行文本长度
         // 打印输出

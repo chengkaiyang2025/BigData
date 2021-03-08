@@ -12,7 +12,7 @@ public class flatMapSensorReading {
 
         // 调整并行度，读取数据源
         env.setParallelism(1);
-        String file = "src/main/resources/sensor_reading.csv";
+        String file = "src/main/resources/sensor_reading_cold.csv";
         DataStreamSource<String> dataStreamSource = env.readTextFile(file);
 
         // 按照，分词

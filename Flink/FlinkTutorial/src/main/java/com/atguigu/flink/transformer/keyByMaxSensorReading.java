@@ -11,7 +11,7 @@ public class keyByMaxSensorReading {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(1);
         // 1、读取文件
-        String file = "src/main/resources/sensor_reading.csv";
+        String file = "src/main/resources/sensor_reading_cold.csv";
         DataStreamSource<String> stringDataStreamSource = env.readTextFile(file);
         // 2、转为pojo类。
         SingleOutputStreamOperator<SensorReading> map = stringDataStreamSource.map(new MapFunction<String, SensorReading>() {
