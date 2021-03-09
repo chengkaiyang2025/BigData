@@ -18,7 +18,7 @@ import org.apache.flink.util.OutputTag;
  */
 
 
-public class WaterMarkTest {
+public class WaterMarkMinSensorReading {
     public static void main(String[] args) throws Exception {
         //从socket文本流中读取数据
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();

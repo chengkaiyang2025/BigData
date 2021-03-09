@@ -2,10 +2,13 @@ package com.atguigu.flink.beans;
 
 import scala.Int;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class SensorReading {
     private String name;
     private Long timeStamp;
-
+    private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
     public SensorReading(String name, double tem) {
         this.name = name;
         this.tem = tem;
@@ -14,9 +17,10 @@ public class SensorReading {
     @Override
     public String toString() {
         return "SensorReading{" +
-                "name='" + name + '\'' +
+                "传感器名称='" + name + '\'' +
+                ", 时间=" + sdf.format(new Date(this.timeStamp)) +
                 ", timeStamp=" + timeStamp +
-                ", tem=" + tem +
+                ", 温度=" + tem +
                 '}';
     }
 
