@@ -16,7 +16,7 @@ public class SensorReading {
     public String toString() {
         return "SensorReading{" +
                 "传感器名称='" + name + '\'' +
-                ", 时间=" + sdf.format(new Date(this.timeStamp)) +
+//                ", 时间=" + sdf.format(new Date(this.timeStamp)) +
                 ", timeStamp=" + timeStamp +
                 ", 温度=" + tem +
                 '}';
