@@ -11,7 +11,7 @@ import javax.xml.crypto.Data;
 
 /**
  * @author ：yangchengkai@yunzhangfang.com
- * @description：TODO
+ * @description：将文件中的内容清洗，打印到kafka中。
  * @date ：2021/3/15 下午6:13
  */
 
