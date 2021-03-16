@@ -4,10 +4,7 @@ import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.table.api.DataTypes;
 import org.apache.flink.table.api.Table;
 import org.apache.flink.table.api.java.StreamTableEnvironment;
-import org.apache.flink.table.descriptors.Csv;
-import org.apache.flink.table.descriptors.FileSystem;
-import org.apache.flink.table.descriptors.Kafka;
-import org.apache.flink.table.descriptors.Schema;
+import org.apache.flink.table.descriptors.*;
 import org.apache.flink.table.types.DataType;
 
 import javax.xml.crypto.Data;
@@ -35,12 +32,19 @@ public class TableTest4_KafkaPipeline {
 
         Table resultTable = tableEnv.sqlQuery("select id,temp from inputTable");
         String outputFile = "src/main/resources/out2.txt";
-        tableEnv.connect(new FileSystem().path(outputFile))
-                .withFormat(new Csv())
+        tableEnv.connect(new Kafka()
+                .version("universal")
+                .topic("sensor")
+                .property("zookeeper.connect", "172.24.10.5:2181")
+                .property("bootstrap.servers", "172.24.10.5:9092")
+                .startFromLatest()
+//                .property("group.id", "testGroup")
+        ).withFormat(new Json())
                 .withSchema(new Schema()
-                        .field("id",DataTypes.STRING())
-                        .field("temp",DataTypes.DOUBLE()))
-                .createTemporaryTable("outputTable");
+                                .field("id", DataTypes.STRING())
+//                        .field("timestamp", DataTypes.BIGINT())
+                                .field("temp", DataTypes.DOUBLE())
+                ).createTemporaryTable("outputTable");
         resultTable.insertInto("outputTable");
 
         env.execute();
