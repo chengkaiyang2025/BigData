@@ -1,4 +1,4 @@
-package com.atguigu.apitest.stream;
+package com.atguigu.apitest.source;
 
 import com.atguigu.apitest.batch.WordCount;
 import org.apache.flink.api.java.tuple.Tuple2;
