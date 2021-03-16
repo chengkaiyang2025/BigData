@@ -3,6 +3,7 @@ package com.atguigu.apitest.sink;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.common.serialization.SimpleStringSchema;
+import org.apache.flink.api.java.utils.ParameterTool;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
@@ -16,6 +17,7 @@ import java.util.List;
 /**
  * @author ：yangchengkai@yunzhangfang.com
  * @description：从文件中读取日志，写入到kafka中，模拟用户点击流。
+ * --filepath /home/yzf/IdeaProjects/Bigdata/Flink/FlinkPractice/src/main/resources/output.csv
  * @date ：2021/3/16 下午2:41
  */
 
@@ -24,6 +26,8 @@ public class KafkaSink {
     public static void main(String[] args) throws Exception {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(1);
+        final ParameterTool params = ParameterTool.fromArgs(args);
+
         DataStreamSource<String> source = env.addSource(new SourceFunction<String>() {
 
             boolean isRunning = true;
@@ -31,7 +35,7 @@ public class KafkaSink {
             @Override
             public void run(SourceContext<String> sourceContext) throws Exception {
                 List<String> lines = new ArrayList<String>();
-                String file = "src/main/resources/output.csv";
+                String file = params.get("filepath");
                 InputStream ins = null; // raw byte-stream
                 Reader r = null; // cooked reader
                 BufferedReader br = null; // buffered for readLine()
