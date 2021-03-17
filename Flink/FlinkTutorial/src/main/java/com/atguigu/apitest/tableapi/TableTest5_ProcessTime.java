@@ -39,8 +39,8 @@ public class TableTest5_ProcessTime {
         });
 
         StreamTableEnvironment tableEnv = StreamTableEnvironment.create(env);
-        Table from = tableEnv.fromDataStream( source,"name,timeStamp as ts,tem,pc.proctime");
-        tableEnv.createTemporaryView("inputTable",from);
+//        Table from = tableEnv.fromDataStream( source,);
+        tableEnv.createTemporaryView("inputTable",source,"name,timeStamp as ts,tem,pc.proctime");
         Table table = tableEnv.sqlQuery("select * from inputTable");
         tableEnv.toAppendStream(table, Row.class).print("增加事件时间");
         env.execute();
