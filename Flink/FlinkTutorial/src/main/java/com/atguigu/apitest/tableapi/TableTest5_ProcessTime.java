@@ -13,6 +13,9 @@ import org.apache.flink.types.Row;
 import java.math.BigInteger;
 import java.util.Random;
 
+/**
+ * 流转为表，然后添加processtime
+ */
 public class TableTest5_ProcessTime {
     public static void main(String[] args) throws Exception {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
