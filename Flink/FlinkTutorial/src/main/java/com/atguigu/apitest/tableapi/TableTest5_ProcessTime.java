@@ -42,7 +42,9 @@ public class TableTest5_ProcessTime {
 //        Table from = tableEnv.fromDataStream( source,);
         tableEnv.createTemporaryView("inputTable",source,"name,timeStamp as ts,tem,pc.proctime");
         Table table = tableEnv.sqlQuery("select * from inputTable");
-        tableEnv.toAppendStream(table, Row.class).print("增加事件时间");
+        table.printSchema(); // pc: TIMESTAMP(3) *PROCTIME* 精度为3的timestamp
+
+                tableEnv.toAppendStream(table, Row.class).print("增加事件时间");
         env.execute();
     }
 
