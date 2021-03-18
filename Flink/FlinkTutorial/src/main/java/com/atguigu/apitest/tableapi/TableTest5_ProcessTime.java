@@ -7,7 +7,6 @@ import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.functions.source.SourceFunction;
 import org.apache.flink.table.api.Table;
 import org.apache.flink.table.api.java.StreamTableEnvironment;
-import org.apache.flink.table.expressions.Rand;
 import org.apache.flink.types.Row;
 
 import java.math.BigInteger;
