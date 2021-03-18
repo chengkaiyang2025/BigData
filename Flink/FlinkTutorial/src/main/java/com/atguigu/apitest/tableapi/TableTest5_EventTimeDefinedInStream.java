@@ -8,14 +8,16 @@ import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.functions.timestamps.BoundedOutOfOrdernessTimestampExtractor;
 import org.apache.flink.streaming.api.windowing.time.Time;
-
+import org.apache.flink.table.api.Table;
+import org.apache.flink.table.api.java.StreamTableEnvironment;
+import org.apache.flink.types.Row;
 /**
  * 从文件 sensor.txt 中读取数据
  * 在流中设置指定时间字段，并设置2秒的水位线。
  * 然后转为流表。
  */
 public class TableTest5_EventTimeDefinedInStream {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(1);
         // 设置Event时间
@@ -35,8 +37,15 @@ public class TableTest5_EventTimeDefinedInStream {
         }).assignTimestampsAndWatermarks(new BoundedOutOfOrdernessTimestampExtractor<SensorReading>(Time.seconds(2)) {
             @Override
             public long extractTimestamp(SensorReading element) {
-                return element.getTimeStamp()*1000;
+                return element.getTimeStamp()*1000L;
             }
         });
+//        source.print();
+        StreamTableEnvironment tableEnv = StreamTableEnvironment.create(env);
+        Table table1 = tableEnv.fromDataStream(map, "name,timeStamp as ts,tem,rt.rowtime");
+        tableEnv.createTemporaryView("inputTable",table1);
+        Table table = tableEnv.sqlQuery("select * from inputTable");
+        tableEnv.toAppendStream(table, Row.class).print("table API");
+        env.execute();
     }
 }
