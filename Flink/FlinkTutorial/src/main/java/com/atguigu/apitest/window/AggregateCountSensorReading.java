@@ -10,7 +10,7 @@ import org.apache.flink.streaming.api.windowing.time.Time;
 
 import java.util.Random;
 
-public class AggregateSensorReading {
+public class AggregateCountSensorReading {
     public static void main(String[] args) throws Exception {
         // 随机生成温度传感器的值
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
