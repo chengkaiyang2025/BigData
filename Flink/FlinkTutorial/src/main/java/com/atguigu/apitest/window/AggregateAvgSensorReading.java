@@ -4,6 +4,7 @@ import com.atguigu.apitest.beans.SensorReading;
 import org.apache.flink.api.common.functions.AggregateFunction;
 import org.apache.flink.api.common.functions.RichAggregateFunction;
 import org.apache.flink.api.java.tuple.Tuple2;
+import org.apache.flink.api.java.tuple.Tuple3;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
@@ -28,7 +29,7 @@ public class AggregateAvgSensorReading {
             public void run(SourceContext<SensorReading> ctx) throws Exception {
                 while (isRunning) {
                     ctx.collect(new SensorReading(
-                            "sensor_" + r.nextInt(1), 35 + r.nextGaussian() * 10
+                            "sensor_" + r.nextInt(3), 35 + r.nextGaussian() * 10
                     ));
                     Thread.sleep(1000L);
                 }
@@ -41,28 +42,30 @@ public class AggregateAvgSensorReading {
             }
         });
         // 使用RichAggregateFunction获得 当前的key
-        SingleOutputStreamOperator<Double> aggregate = source.keyBy("name").timeWindow(Time.seconds(5))
-                .aggregate(new AggregateFunction<SensorReading, Tuple2<Double, Integer>, Double>() {
+        SingleOutputStreamOperator<Tuple2<String,Double>> aggregate = source.keyBy("name").timeWindow(Time.seconds(5))
+                .aggregate(new AggregateFunction<SensorReading, Tuple3<String,Double, Integer>, Tuple2<String,Double>>() {
 
                     @Override
-                    public Tuple2<Double, Integer> createAccumulator() {
+                    public Tuple3<String,Double, Integer> createAccumulator() {
 
-                        return new Tuple2<>(Double.valueOf(0L),0);
+                        return new Tuple3<>("",Double.valueOf(0L),0);
                     }
 
                     @Override
-                    public Tuple2<Double, Integer> add(SensorReading value, Tuple2<Double, Integer> accumulator) {
-                        return new Tuple2<>(value.getTem()+accumulator.f0,accumulator.f1+1);
+                    public Tuple3<String,Double, Integer> add(SensorReading value, Tuple3<String,Double, Integer> accumulator) {
+                        return new Tuple3<>(value.getName(),value.getTem()+accumulator.f1,accumulator.f2+1);
+
                     }
 
                     @Override
-                    public Double getResult(Tuple2<Double, Integer> accumulator) {
-                        return accumulator.f0/ accumulator.f1;
+                    public Tuple2<String,Double> getResult(Tuple3<String, Double, Integer> a) {
+
+                        return new Tuple2<>(a.f0,a.f1/a.f2);
                     }
 
                     @Override
-                    public Tuple2<Double, Integer> merge(Tuple2<Double, Integer> a, Tuple2<Double, Integer> b) {
-                        return new Tuple2<>(a.f0+b.f0,a.f1+b.f1);
+                    public Tuple3<String,Double, Integer> merge(Tuple3<String,Double, Integer> a, Tuple3<String,Double, Integer> b) {
+                        return new Tuple3<>(a.f0,a.f1+b.f1,a.f2+b.f2);
                     }
                 });
         source.print("SOURCE---------");
