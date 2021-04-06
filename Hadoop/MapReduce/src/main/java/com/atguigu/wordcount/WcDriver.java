@@ -31,8 +31,10 @@ public class WcDriver {
         job.setOutputValueClass(IntWritable.class);
         // 5、设置输入输出的数据
 
-        FileInputFormat.setInputPaths(job, new Path("src/main/resources/wordcount.txt"));
-        FileOutputFormat.setOutputPath(job, new Path("src/main/resources/result"));
+        FileInputFormat.setInputPaths(job, new Path(args[0]));
+//        FileInputFormat.setInputPaths(job, new Path("src/main/resources/wordcount.txt"));
+        FileOutputFormat.setOutputPath(job, new Path(args[1]));
+//        FileOutputFormat.setOutputPath(job, new Path("src/main/resources/result"));
         // 6、提交job
         boolean b = job.waitForCompletion(true);
         System.exit(b ? 0:1);
