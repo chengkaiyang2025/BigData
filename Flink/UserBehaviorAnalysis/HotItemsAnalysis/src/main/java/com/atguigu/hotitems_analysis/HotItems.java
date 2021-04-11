@@ -29,7 +29,7 @@ public class HotItems {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(1);
         env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
-        String file = "/home/yzf/IdeaProjects/Bigdata/Flink/UserBehaviorAnalysis/HotItemsAnalysis/src/main/resources/UserBehavior.csv";
+        String file = "D:\\IdeaProject\\Bigdata\\Flink\\UserBehaviorAnalysis\\HotItemsAnalysis\\src\\main\\resources\\UserBehavior.csv";
         SingleOutputStreamOperator<UserBehavior> source
                 = env.readTextFile(file).map(new MapFunction<String, UserBehavior>() {
             @Override
