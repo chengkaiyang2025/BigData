@@ -56,16 +56,16 @@ public class HotItemsWithSql {
 //        // 5、将流转为表
         tableEnv.createTemporaryView("data_table",map,"itemId,behavior,timestamp.rowtime as ts");
 //
-        Table resultSqltable = tableEnv.sqlQuery("select * from " +
-                "  ( select *, ROW_NUMBER() over (partition by windowEnd order by cnt desc) as row_num " +
-                "  from ( " +
-                "    select itemId, count(itemId) as cnt, HOP_END(ts, interval '5' minute, interval '1' hour) as windowEnd " +
-                "    from data_table " +
-                "    where behavior = 'pv' " +
-                "    group by itemId, HOP(ts, interval '5' minute, interval '1' hour)" +
-                "    )" +
-                "  ) " +
-                " where row_num <= 5 ");
+        Table resultSqltable = tableEnv.sqlQuery("select * from (\n" +
+                "                select *,ROW_NUMBER() over (partition by windowEnd order by cnt desc) as row_num from (\n" +
+                "                        select itemId, TUMBLE_END(ts, interval '1' hour) as windowEnd, count(itemId) as cnt\n" +
+                "        from data_table where behavior = 'pv'\n" +
+                "        group by itemId,TUMBLE(ts, interval '1' hour)\n" +
+                "        ) \n" +
+                "        ) where row_num <= 5");
+
+
+
 //
 //        // 6、纯sql实现
         tableEnv.toRetractStream(resultSqltable,Row.class).print();
