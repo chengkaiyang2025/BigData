@@ -6,6 +6,8 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
+import org.apache.hadoop.mapreduce.lib.input.CombineFileInputFormat;
+import org.apache.hadoop.mapreduce.lib.input.CombineTextInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
@@ -29,8 +31,11 @@ public class WordCountDriver {
         // 6、设置reducer output
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(IntWritable.class);
+        job.setInputFormatClass(CombineTextInputFormat.class);
+        CombineTextInputFormat.setMaxInputSplitSize(job, 20971520*2);
+
         // 7、设置in path
-        FileInputFormat.setInputPaths(job,new Path("src/main/resources/input/11_input/inputcombinetextinputformat"));
+        CombineTextInputFormat.setInputPaths(job,new Path("src/main/resources/input/11_input/inputcombinetextinputformat"));
         FileOutputFormat.setOutputPath(job,new Path("src/main/resources/output/11_input/inputcombinetextinputformat"));
 
 
