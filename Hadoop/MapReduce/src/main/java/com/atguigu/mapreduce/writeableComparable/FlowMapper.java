@@ -23,7 +23,7 @@ public class FlowMapper extends Mapper<LongWritable, Text, FlowBean, Text> {
         outV.set(phone);
         outK.setUpFlow(upFlow);
         outK.setDownFlow(downFlow);
-        outK.setSumFLow();
+        outK.setSumFlow();
 
         context.write(outK, outV);
     }
