@@ -28,7 +28,6 @@ public class WcDriver {
         job.setOutputValueClass(IntWritable.class);
         // 5、设置输入输出的数据
         job.setCombinerClass(WcReducer.class);
-
 //        FileInputFormat.setInputPaths(job, new Path(args[0]));
         FileInputFormat.setInputPaths(job, new Path("src/main/resources/input/11_input/inputword/hello.txt"));
 //        FileOutputFormat.setOutputPath(job, new Path(args[1]));
