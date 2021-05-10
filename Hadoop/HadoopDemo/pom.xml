@@ -13,6 +13,7 @@
         <module>HDFSDemo</module>
         <module>YarnDemo</module>
         <module>MapReducerParctice</module>
+        <module>MapReducerPrac</module>
     </modules>
 
     <properties>
