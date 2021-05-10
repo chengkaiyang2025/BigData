@@ -27,9 +27,82 @@ import java.io.IOException;
  * "status":"304"}
  */
 public class NginxBean implements Writable {
+    private String fields_set;
+    private String time_local;
+    private String request;
+    private Long request_time;
+    private Long request_length;
+    private String status;
+
+    public String getFields_set() {
+        return fields_set;
+    }
+
+    public void setFields_set(String fields_set) {
+        this.fields_set = fields_set;
+    }
+
+    public String getTime_local() {
+        return time_local;
+    }
+
+    public void setTime_local(String time_local) {
+        this.time_local = time_local;
+    }
+
+    public String getRequest() {
+        return request;
+    }
+
+    public void setRequest(String request) {
+        this.request = request;
+    }
+
+    public Long getRequest_time() {
+        return request_time;
+    }
+
+    public void setRequest_time(Long request_time) {
+        this.request_time = request_time;
+    }
+
+    public Long getRequest_length() {
+        return request_length;
+    }
+
+    public void setRequest_length(Long request_length) {
+        this.request_length = request_length;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public NginxBean() {
+    }
+
+    /**
+     * @param dataOutput
+     *     private String fields_set;
+     *     private String time_local;
+     *     private String request;
+     *     private Long request_time;
+     *     private Long request_length;
+     *     private String status;
+     * @throws IOException
+     */
     @Override
     public void write(DataOutput dataOutput) throws IOException {
-
+        dataOutput.writeUTF(this.fields_set);
+        dataOutput.writeUTF(this.time_local);
+        dataOutput.writeUTF(this.request);
+        dataOutput.writeLong(this.request_time);
+        dataOutput.writeLong(this.request_length);
+        dataOutput.writeUTF(this.status);
     }
 
     @Override
