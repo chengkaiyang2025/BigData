@@ -1,4 +1,4 @@
-package com.atguigu.practice.bean;
+package com.atguigu.practice.filter_status;
 
 import org.apache.hadoop.io.Writable;
 
@@ -107,6 +107,11 @@ public class NginxBean implements Writable {
 
     @Override
     public void readFields(DataInput dataInput) throws IOException {
-
+        this.fields_set = dataInput.readUTF();
+        this.time_local = dataInput.readUTF();
+        this.request = dataInput.readUTF();
+        this.request_time = dataInput.readLong();
+        this.request_length = dataInput.readLong();
+        this.status = dataInput.readUTF();
     }
 }
