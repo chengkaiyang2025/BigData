@@ -114,4 +114,16 @@ public class NginxBean implements Writable {
         this.request_length = dataInput.readLong();
         this.status = dataInput.readUTF();
     }
+
+    @Override
+    public String toString() {
+        return "NginxBean{" +
+                "fields_set='" + fields_set + '\'' +
+                ", time_local='" + time_local + '\'' +
+                ", request='" + request + '\'' +
+                ", request_time=" + request_time +
+                ", request_length=" + request_length +
+                ", status='" + status + '\'' +
+                '}';
+    }
 }
