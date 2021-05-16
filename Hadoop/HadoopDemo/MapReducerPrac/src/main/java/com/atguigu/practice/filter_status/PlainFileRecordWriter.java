@@ -17,7 +17,7 @@ public class PlainFileRecordWriter extends RecordWriter<Text, Text> {
         try{
             FileSystem fileSystem = FileSystem.get(job.getConfiguration());
 
-            fs = fileSystem.create(new Path("/home/yzf/Bigdata/Hadoop/HadoopDemo/MapReducerPrac/src/main/resources/result/out.log"));
+            fs = fileSystem.create(new Path("MapReducerPrac/src/main/resources/result/out.txt"));
         } catch (IOException e) {
             e.printStackTrace();
         }

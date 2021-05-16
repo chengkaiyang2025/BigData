@@ -25,8 +25,8 @@ public class FilterStatusDriver {
         job.setOutputValueClass(Text.class);
 
         job.setOutputFormatClass(PlainFileOutputFomat.class);
-        FileInputFormat.setInputPaths(job, new Path("/home/yzf/Bigdata/Hadoop/HadoopDemo/MapReducerPrac/src/main/resources/safe_interface2.json"));
-        FileOutputFormat.setOutputPath(job, new Path("/home/yzf/Bigdata/Hadoop/HadoopDemo/MapReducerPrac/src/main/resources/output/filter_status"));
+        FileInputFormat.setInputPaths(job, new Path("MapReducerPrac/src/main/resources/safe_interface2.json"));
+        FileOutputFormat.setOutputPath(job, new Path("MapReducerPrac/src/main/resources/output/filter_status"));
 
         boolean b = job.waitForCompletion(true);
         System.exit(b ? 0 : 1);
