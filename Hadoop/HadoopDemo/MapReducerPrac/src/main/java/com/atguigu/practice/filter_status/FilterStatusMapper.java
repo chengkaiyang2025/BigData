@@ -26,7 +26,7 @@ public class FilterStatusMapper extends Mapper<LongWritable, Text, Text, NginxBe
         nginxBean.setRequest(parse.getString("request"));
         nginxBean.setRequest_length(parse.getLong("request_length"));
         nginxBean.setRequest_time(parse.getLong("request_time"));
-        if(nginxBean.getStatus().equals("200")){
+        if(nginxBean.getStatus().equals("404")){
             outK.set(nginxBean.getFields_set());
             context.write(outK, nginxBean);
         }

@@ -11,6 +11,10 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 import java.io.IOException;
 
+/**
+ * https://github.com/yunzhangfang-di/Bigdata/issues/2
+ *  1、select * from nginx where status = 404
+ */
 public class FilterStatusDriver {
     public static void main(String[] args) throws IOException, ClassNotFoundException, InterruptedException {
         Configuration conf = new Configuration();
