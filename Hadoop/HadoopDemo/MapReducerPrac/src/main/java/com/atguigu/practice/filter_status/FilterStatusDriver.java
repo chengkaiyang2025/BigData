@@ -18,15 +18,21 @@ public class FilterStatusDriver {
         job.setJarByClass(FilterStatusDriver.class);
         job.setMapperClass(FilterStatusMapper.class);
         job.setReducerClass(FilterStatusReducer.class);
-
         job.setMapOutputKeyClass(Text.class);
         job.setMapOutputValueClass(NginxBean.class);
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(Text.class);
 
+        String input = "MapReducerPrac/src/main/resources/safe_interface2.json";
+        String output = "MapReducerPrac/src/main/resources/output/filter_status";
+
+        if(args.length == 2){
+            input = args[0];
+            output = args[1];
+        }
         job.setOutputFormatClass(PlainFileOutputFomat.class);
-        FileInputFormat.setInputPaths(job, new Path("MapReducerPrac/src/main/resources/safe_interface2.json"));
-        FileOutputFormat.setOutputPath(job, new Path("MapReducerPrac/src/main/resources/output/filter_status"));
+        FileInputFormat.setInputPaths(job, new Path(input));
+        FileOutputFormat.setOutputPath(job, new Path(output));
 
         boolean b = job.waitForCompletion(true);
         System.exit(b ? 0 : 1);
