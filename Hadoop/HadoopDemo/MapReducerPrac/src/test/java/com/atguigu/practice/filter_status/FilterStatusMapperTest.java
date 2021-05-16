@@ -1,10 +1,9 @@
 package com.atguigu.practice.filter_status;
 
-import static org.junit.Assert.*;
 import com.alibaba.fastjson.JSONObject;
+import com.atguigu.practice.bean.NginxBean;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
 public class FilterStatusMapperTest {
     @Test
     public void testJson(){

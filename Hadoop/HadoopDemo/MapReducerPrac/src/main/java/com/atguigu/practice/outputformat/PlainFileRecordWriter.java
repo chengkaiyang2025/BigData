@@ -1,4 +1,4 @@
-package com.atguigu.practice.filter_status;
+package com.atguigu.practice.outputformat;
 
 import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.hadoop.fs.FileSystem;

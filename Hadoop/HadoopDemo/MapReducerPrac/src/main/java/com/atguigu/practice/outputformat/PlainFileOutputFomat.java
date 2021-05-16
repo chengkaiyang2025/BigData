@@ -1,13 +1,9 @@
-package com.atguigu.practice.filter_status;
-
-import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.io.NullWritable;
+package com.atguigu.practice.outputformat;
 
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.RecordWriter;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
-import org.apache.hadoop.util.Progressable;
 
 import java.io.IOException;
 

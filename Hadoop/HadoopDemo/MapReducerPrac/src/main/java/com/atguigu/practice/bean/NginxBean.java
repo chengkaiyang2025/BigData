@@ -1,4 +1,4 @@
-package com.atguigu.practice.filter_status;
+package com.atguigu.practice.bean;
 
 import org.apache.hadoop.io.Writable;
 
