@@ -1,4 +1,4 @@
-package com.atguigu.practice.filter_status;
+package com.atguigu.practice.count200;
 
 import com.alibaba.fastjson.JSONObject;
 import com.atguigu.practice.bean.NginxBean;
@@ -7,18 +7,14 @@ import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 
+import javax.swing.text.TabExpander;
 import java.io.IOException;
 
-public class FilterStatusMapper extends Mapper<LongWritable, Text, Text, NginxBean> {
-    private NginxBean nginxBean = new NginxBean();
+public class Count200Mapper extends Mapper<LongWritable, Text, Text, NginxBean> {
+    private NginxBean outV = new NginxBean();
     private Text outK = new Text();
     @Override
     protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
-//        super.map(key, value, context);
-        Parser.jsonStringToPojo(value.toString(), nginxBean);
-        if(nginxBean.getStatus().equals("404")){
-            outK.set(nginxBean.getFields_set());
-            context.write(outK, nginxBean);
-        }
+        Parser.jsonStringToPojo(value.toString(), outV);
     }
 }
