@@ -8,16 +8,27 @@ import org.apache.hadoop.mapreduce.Mapper;
 
 import java.io.IOException;
 
-public class FilterStatusMapper extends Mapper<LongWritable, Text, NginxBean, NullWritable> {
-    private NginxBean nginxBean;
+public class FilterStatusMapper extends Mapper<LongWritable, Text, Text, NginxBean> {
+    private NginxBean nginxBean = new NginxBean();
+    private Text outK = new Text();
     @Override
     protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
 //        super.map(key, value, context);
         String s = value.toString();
         JSONObject parse = (JSONObject) JSONObject.parse(s);
-        nginxBean = parse.toJavaObject(NginxBean.class);
+        if(parse.getString("fields-set") == null){
+            return;
+        }
+
+        nginxBean.setStatus(parse.getString("status"));
+        nginxBean.setFields_set(parse.getString("fields-set"));
+        nginxBean.setTime_local(parse.getString("time_local"));
+        nginxBean.setRequest(parse.getString("request"));
+        nginxBean.setRequest_length(parse.getLong("request_length"));
+        nginxBean.setRequest_time(parse.getLong("request_time"));
         if(nginxBean.getStatus().equals("200")){
-            context.write(nginxBean, NullWritable.get() );
+            outK.set(nginxBean.getFields_set());
+            context.write(outK, nginxBean);
         }
     }
 }
