@@ -1,4 +1,4 @@
-package com.atguigu.practice.filter_status;
+package com.atguigu.practice.filterStatus;
 
 import com.atguigu.practice.bean.NginxBean;
 import com.atguigu.practice.outputformat.PlainFileOutputFomat;
@@ -7,7 +7,6 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
-import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 import java.io.IOException;

@@ -1,6 +1,5 @@
-package com.atguigu.practice.filter_status;
+package com.atguigu.practice.filterStatus;
 
-import com.alibaba.fastjson.JSONObject;
 import com.atguigu.practice.bean.NginxBean;
 import com.atguigu.practice.util.Parser;
 import org.apache.hadoop.io.LongWritable;

@@ -52,7 +52,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>com.atguigu.practice.filter_status.FilterStatusDriver</mainClass>
+                            <mainClass>com.atguigu.practice.filterStatus.FilterStatusDriver</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
