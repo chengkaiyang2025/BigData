@@ -39,8 +39,9 @@ public class FilterStatusDriver {
         job.setOutputFormatClass(PlainFileOutputFomat.class);
         // 如果在集群运行,写入一个文件一定要限制设置为1个reducer,否则其他reducer会获取不到权限
         job.setNumReduceTasks(1);
-        //
-//        FileInputFormat.setMinInputSplitSize(job,1073741824*2);
+        // 设置分片最小为
+//        FileInputFormat.setMinInputSplitSize(job,1024*1024*1024*4);
+//        FileInputFormat.setMaxInputSplitSize(job,1024*1024*1024*10);
         FileInputFormat.setInputPaths(job, new Path(input));
         FileOutputFormat.setOutputPath(job, new Path(output));
 
