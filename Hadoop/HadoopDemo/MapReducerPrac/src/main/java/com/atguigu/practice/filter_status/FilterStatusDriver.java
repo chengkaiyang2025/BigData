@@ -28,9 +28,10 @@ public class FilterStatusDriver {
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(Text.class);
 
-        String input = "MapReducerPrac/src/main/resources/safe_interface2.json";
-        String output = "MapReducerPrac/src/main/resources/output/filter_status";
-
+//        String input = "MapReducerPrac/src/main/resources/safe_interface2.json";
+//        String output = "MapReducerPrac/src/main/resources/output/filter_status";
+        String input = "hdfs:///apps/data/warehouse/tmp/safe_interface_2021-05-14.json";
+        String output = "hdfs:///apps/data/warehouse/tmp/output/filter_status";
         if(args.length == 2){
             input = args[0];
             output = args[1];

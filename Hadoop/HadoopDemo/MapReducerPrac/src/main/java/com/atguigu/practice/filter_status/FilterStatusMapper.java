@@ -16,9 +16,14 @@ public class FilterStatusMapper extends Mapper<LongWritable, Text, Text, NginxBe
     protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
 //        super.map(key, value, context);
         Parser.jsonStringToPojo(value.toString(), nginxBean);
-        if(nginxBean.getStatus().equals("404")){
-            outK.set(nginxBean.getFields_set());
-            context.write(outK, nginxBean);
+        try {
+            if(nginxBean.getStatus() != null && nginxBean.getStatus().equals("403")){
+                outK.set(nginxBean.getFields_set());
+                context.write(outK, nginxBean);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
+
     }
 }
