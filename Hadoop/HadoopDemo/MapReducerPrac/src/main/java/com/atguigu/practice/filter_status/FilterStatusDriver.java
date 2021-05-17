@@ -7,6 +7,7 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 import java.io.IOException;
@@ -44,6 +45,10 @@ public class FilterStatusDriver {
 //        FileInputFormat.setMaxInputSplitSize(job,1024*1024*1024*10);
         FileInputFormat.setInputPaths(job, new Path(input));
         FileOutputFormat.setOutputPath(job, new Path(output));
+//        job.setInputFormatClass(FileInputFormat.class);
+        // 必须 setInputPaths之后，必须 小于long 2147483647,big than this number will cause stack when running in hadoop cluster.
+        FileInputFormat.setMinInputSplitSize(job,2147483647);
+        FileInputFormat.setMaxInputSplitSize(job,Long.MAX_VALUE);
 
         boolean b = job.waitForCompletion(true);
         System.exit(b ? 0 : 1);

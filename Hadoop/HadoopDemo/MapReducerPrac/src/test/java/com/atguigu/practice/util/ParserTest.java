@@ -20,4 +20,9 @@ public class ParserTest {
         Parser.jsonStringToPojo(jsonString,nginxBean);
         System.out.println(nginxBean);
     }
+
+    @Test
+    public void t(){
+        long size = 2147483647;
+    }
 }
