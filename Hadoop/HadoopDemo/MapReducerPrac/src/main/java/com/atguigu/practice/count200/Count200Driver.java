@@ -33,16 +33,21 @@ public class Count200Driver {
         job.setOutputValueClass(Text.class);
         job.setOutputFormatClass(PlainFileOutputFomat.class);
 
-        String input = "MapReducerPrac/src/main/resources/safe_interface2.json";
-        String output = "MapReducerPrac/src/main/resources/output/count2";
-
-        if(args.length == 2){
-            input = args[0];
-            output = args[1];
+        String input = "hdfs:///apps/data/warehouse/tmp/safe_interface_2021-05-14.json";
+        String output = "hdfs:///apps/data/warehouse/tmp/output/filter_status";
+        if(conf.get("fs.defaultFS").startsWith("file")){
+            input = "MapReducerPrac/src/main/resources/safe_interface2.json";
+            output = "MapReducerPrac/src/main/resources/output/filter_status";
         }
+
         job.setOutputFormatClass(PlainFileOutputFomat.class);
+        // 如果在集群运行,写入一个文件一定要限制设置为1个reducer,否则其他reducer会获取不到权限
+        job.setNumReduceTasks(1);
         FileInputFormat.setInputPaths(job, new Path(input));
         FileOutputFormat.setOutputPath(job, new Path(output));
+
+        FileInputFormat.setMinInputSplitSize(job,2147483647);
+        FileInputFormat.setMaxInputSplitSize(job,Long.MAX_VALUE);
 
         boolean b = job.waitForCompletion(true);
         System.exit(b ? 0 : 1);

@@ -16,7 +16,7 @@ public class Count200Mapper extends Mapper<LongWritable, Text, NullWritable, Ngi
     @Override
     protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
         Parser.jsonStringToPojo(value.toString(), outV);
-        if("200".equals(outV.getStatus())){
+        if(outV.getStatus() != null && "200".equals(outV.getStatus())){
             context.write(NullWritable.get(), outV);
         }
     }
