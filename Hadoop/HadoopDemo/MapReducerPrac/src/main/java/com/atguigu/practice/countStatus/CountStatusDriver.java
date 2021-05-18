@@ -4,6 +4,7 @@ import com.atguigu.practice.bean.NginxBean;
 import com.atguigu.practice.outputformat.PlainFileOutputFomat;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
@@ -20,9 +21,10 @@ public class CountStatusDriver {
 
         job.setMapperClass(CountStatusMapper.class);
         job.setReducerClass(CountStatusReducer.class);
+        job.setCombinerClass(CountStatusCombine.class);
 
         job.setMapOutputKeyClass(Text.class);
-        job.setMapOutputValueClass(NginxBean.class);
+        job.setMapOutputValueClass(LongWritable.class);
 
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(Text.class);

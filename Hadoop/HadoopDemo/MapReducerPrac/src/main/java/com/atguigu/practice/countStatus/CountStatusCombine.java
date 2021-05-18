@@ -1,16 +1,15 @@
 package com.atguigu.practice.countStatus;
 
-import com.atguigu.practice.bean.NginxBean;
+import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 
 import java.io.IOException;
-import java.math.BigInteger;
 
-public class CountStatusReducer extends Reducer<Text, LongWritable, Text, Text> {
+public class CountStatusCombine extends Reducer<Text, LongWritable, Text, LongWritable> {
 
-    private Text outV = new Text();
+    private LongWritable outV = new LongWritable();
     @Override
     protected void reduce(Text key, Iterable<LongWritable> values, Context context) throws IOException, InterruptedException {
 
@@ -18,7 +17,7 @@ public class CountStatusReducer extends Reducer<Text, LongWritable, Text, Text> 
         for (LongWritable value : values) {
             sum += value.get();
         }
-        outV.set(key.toString()+",count:"+String.valueOf(sum));
+        outV.set(sum);
         context.write(key, outV);
     }
 }
