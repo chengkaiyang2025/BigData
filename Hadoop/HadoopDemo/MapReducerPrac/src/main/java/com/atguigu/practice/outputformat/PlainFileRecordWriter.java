@@ -13,14 +13,17 @@ import java.io.IOException;
 public class PlainFileRecordWriter extends RecordWriter<Text, Text> {
     private FSDataOutputStream fs;
     // local
-//    private String outputPath = "MapReducerPrac/src/main/resources/result/out.txt";
-    private String outputPath = "hdfs://master.prd.yzf:8020/apps/data/warehouse/tmp/out.txt";
+    private static final String localOutputPath = "MapReducerPrac/src/main/resources/result/out.txt";
+    private static final String remoteOutputPath = "hdfs://master.prd.yzf:8020/apps/data/warehouse/tmp/out.txt";
 
     public PlainFileRecordWriter(TaskAttemptContext job) {
         try{
             FileSystem fileSystem = FileSystem.get(job.getConfiguration());
-
-            fs = fileSystem.create(new Path(outputPath));
+            if(job.getConfiguration().get("fs.defaultFS").startsWith("file:///")){
+                fs = fileSystem.create(new Path(localOutputPath));
+            }else {
+                fs = fileSystem.create(new Path(remoteOutputPath));
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
