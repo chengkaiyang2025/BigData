@@ -14,5 +14,6 @@ public class Parser {
         nginxBean.setTime_local(Optional.ofNullable(parse.getString("time_local")).orElse("NULL"));
         nginxBean.setRequest_length(Optional.ofNullable(parse.getLong("request_length")).orElse(0L));
         nginxBean.setRequest_time(Optional.ofNullable(parse.getLong("request_time")).orElse(0L));
+        nginxBean.setHttp_cookie(Optional.ofNullable(parse.getString("http_cookie")).orElse("NULL"));
     }
 }

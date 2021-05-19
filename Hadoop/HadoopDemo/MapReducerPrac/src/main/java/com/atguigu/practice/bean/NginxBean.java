@@ -33,6 +33,15 @@ public class NginxBean implements Writable {
     private Long request_time;
     private Long request_length;
     private String status;
+    private String http_cookie;
+
+    public String getHttp_cookie() {
+        return http_cookie;
+    }
+
+    public void setHttp_cookie(String http_cookie) {
+        this.http_cookie = http_cookie;
+    }
 
     public String getFields_set() {
         return fields_set;
