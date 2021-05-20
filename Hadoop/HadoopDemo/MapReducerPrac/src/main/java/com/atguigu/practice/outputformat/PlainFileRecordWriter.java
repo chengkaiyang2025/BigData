@@ -31,7 +31,7 @@ public class PlainFileRecordWriter extends RecordWriter<Text, Text> {
 
     @Override
     public void write(Text key, Text value) throws IOException, InterruptedException {
-        fs.writeBytes(value.toString()+"\n");
+        fs.writeUTF(value.toString()+"\n");
     }
 
     @Override
