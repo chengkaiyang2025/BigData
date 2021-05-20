@@ -33,10 +33,10 @@ public class Count200Driver {
         job.setOutputValueClass(Text.class);
         job.setOutputFormatClass(PlainFileOutputFomat.class);
 
-        String input = "hdfs:///apps/data/warehouse/tmp/safe_interface_2021-05-14.json";
+        String input = "hdfs:///apps/data/warehouse/tmp/join/safe_interface_2021-05-14.json";
         String output = "hdfs:///apps/data/warehouse/tmp/output/filter_status";
         if(conf.get("fs.defaultFS").startsWith("file")){
-            input = "MapReducerPrac/src/main/resources/safe_interface2.json";
+            input = "MapReducerPrac/src/main/resources/join/safe_interface2.json";
             output = "MapReducerPrac/src/main/resources/output/filter_status";
         }
 

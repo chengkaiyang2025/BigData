@@ -22,7 +22,7 @@ public class CountCompanyNameDriver {
 
         job.setMapperClass(CountCompanyNameMapper.class);
         job.setReducerClass(CountCompanyNameReducer.class);
-
+        // TODO 设置combiner
         job.setMapOutputKeyClass(Text.class);
         job.setMapOutputValueClass(CompanyBean.class);
 

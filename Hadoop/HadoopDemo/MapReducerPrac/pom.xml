@@ -62,7 +62,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>com.atguigu.practice.countCompany.CountCompanyDriver</mainClass>
+                            <mainClass>com.atguigu.practice.reduceJoin.CountCompanyNameDriver</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
