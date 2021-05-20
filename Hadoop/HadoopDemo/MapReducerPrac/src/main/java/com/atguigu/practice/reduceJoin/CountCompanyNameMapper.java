@@ -28,32 +28,37 @@ public class CountCompanyNameMapper extends Mapper<LongWritable, Text, Text, Com
     protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
         String companyId = "NULL";
         String line = value.toString();
-        if (fileName.endsWith(".json")){
-            Parser.jsonStringToPojo(line, nginxBean);
-            String http_cookie = nginxBean.getHttp_cookie();
+        try {
+            if (fileName.endsWith(".json")){
+                Parser.jsonStringToPojo(line, nginxBean);
+                String http_cookie = nginxBean.getHttp_cookie();
 
-            if(!http_cookie.equals("NULL")){
-                String access_token = CookieUtil.getCookieValueByCookieKey(http_cookie, "access_token");
-                if(access_token != null && access_token.contains(".")){
-                    companyId = TokenInfoUtil.decode(access_token).getGsId();
+                if(!http_cookie.equals("NULL")){
+                    String access_token = CookieUtil.getCookieValueByCookieKey(http_cookie, "access_token");
+                    if(access_token != null && access_token.contains(".")){
+                        companyId = TokenInfoUtil.decode(access_token).getGsId();
+                    }
                 }
+
+                outV.setCompanyId(companyId);
+                outV.setCompanyName("");
+                outV.setFlag(".json");
+                outK.set(companyId);
+
+                context.write(outK, outV);
+            }else if(fileName.endsWith(".csv")){
+                String[] split = line.split(",");
+
+                outV.setCompanyId(split[0]);
+                outV.setCompanyName(split[1]);
+                outV.setFlag(".csv");
+
+                outK.set(split[0]);
+                context.write(outK, outV);
             }
-
-            outV.setCompanyId(companyId);
-            outV.setCompanyName("");
-            outV.setFlag(".json");
-            outK.set(companyId);
-
-            context.write(outK, outV);
-        }else if(fileName.endsWith(".csv")){
-            String[] split = line.split(",");
-
-            outV.setCompanyId(split[0]);
-            outV.setCompanyName(split[1]);
-            outV.setFlag(".csv");
-
-            outK.set(split[0]);
-            context.write(outK, outV);
+        }catch (Exception e){
+            e.printStackTrace();
         }
+
     }
 }
