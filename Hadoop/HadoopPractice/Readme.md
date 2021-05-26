@@ -431,3 +431,134 @@ http://hadoop100:9870
 yarn:resourceManager
 
 http://hadoop101:8088
+
+#### 6、集群基本测试
+
+上传小文件
+
+```shell
+hadoop fs -mkdir /input
+hadoop fs -put $HADOOP_HOME/wcinput/word.txt /input
+pwd
+/opt/module/hadoop-3.1.3/data/dfs/data/current/BP-1470048873-172.37.4.198-1621906661709/current/finalized/subdir0/subdir0
+hadoop jar share/hadoop/mapreduce/hadoop-mapreduce-examples-3.1.3.jar wordcount /input /output
+```
+
+
+
+#### 7、配置历史服务器
+
+```shell
+vim mapred-site.xml
+<!-- 历史服务器端地址 -->
+<property>
+<name>mapreduce.jobhistory.address</name>
+<value>hadoop102:10020</value>
+</property>
+<!-- 历史服务器 web 端地址 -->
+<property>
+<name>mapreduce.jobhistory.webapp.address</name>
+<value>hadoop102:19888</value>
+</property>
+## 分发配置
+xsync $HADOOP_HOME/etc/hadoop/mapred-site.xml
+在hadoop0启动：mapred --daemon start historyserver
+```
+
+8、配置日志聚集
+
+概念：应用运行完成以后，将程序运行日志上传到HDFS系统上。
+
+```shell
+vim yarn-site.xml
+<!-- 开启日志聚集功能 -->
+<property>
+<name>yarn.log-aggregation-enable</name>
+<value>true</value>
+</property>
+<!-- 设置日志聚集服务器地址 -->
+<property>
+<name>yarn.log.server.url</name>
+<value>http://hadoop100:19888/jobhistory/logs</value>
+</property>
+<!-- 设置日志保留时间为 7 天 -->
+<property>
+<name>yarn.log-aggregation.retain-seconds</name>
+<value>604800</value>
+</property>
+
+xsync $HADOOP_HOME/etc/hadoop/yarn-site.xml
+## 重启NodeManager、ResourceManager、HistoryServer
+hadoop101： sbin/stop-yarn.sh
+hadoop100： mapred --daemon stop historyserver
+## 启动
+hadoop101： sbin/start-yarn.sh
+hadoop100： mapred --daemon start historyserver
+
+## 重新运行wc
+hadoop fs -rm -r /output
+hadoop jar share/hadoop/mapreduce/hadoop-mapreduce-examples-3.1.3.jar wordcount /input /output
+```
+
+#### 8、编写hadoop集群常用脚本
+
+```shell
+hadoop100 cd /home/atguigu/bin
+vim myhadoop.sh
+
+
+
+#!/bin/bash
+if [ $# -lt 1 ]
+then
+    echo "No Args Input..."
+    exit ;
+fi
+case $1 in
+"start")
+        echo " =================== 启动 hadoop 集群 ==================="
+        echo " --------------- 启动 hdfs ---------------"
+        ssh hadoop100 "/opt/module/hadoop-3.1.3/sbin/start-dfs.sh"
+        echo " --------------- 启动 yarn ---------------"
+        ssh hadoop101 "/opt/module/hadoop-3.1.3/sbin/start-yarn.sh"
+        echo " --------------- 启动 historyserver ---------------"
+        ssh hadoop100 "/opt/module/hadoop-3.1.3/bin/mapred --daemon start historyserver"
+;;
+"stop")
+        echo " =================== 关闭 hadoop 集群 ==================="
+        echo " --------------- 关闭 historyserver ---------------"
+        ssh hadoop100 "/opt/module/hadoop-3.1.3/bin/mapred --daemon stop historyserver"
+        echo " --------------- 关闭 yarn ---------------"
+        ssh hadoop101 "/opt/module/hadoop-3.1.3/sbin/stop-yarn.sh"
+        echo " --------------- 关闭 hdfs ---------------"
+        ssh hadoop100 "/opt/module/hadoop-3.1.3/sbin/stop-dfs.sh"
+;;
+*)
+    echo "Input Args Error..."
+;;
+esac
+
+
+## 执行权限
+chmod +x myhadoop.sh
+```
+
+```shell
+vim jpsall
+
+
+#!/bin/bash
+for host in hadoop100 hadoop101 hadoop102
+do
+              echo "=============== $host ==============="
+              ssh $host jps
+done
+
+chmod +x jpsall
+```
+
+```shell
+## 同步脚本
+xsync /home/atguigu/bin/
+```
+
