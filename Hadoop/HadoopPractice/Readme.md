@@ -23,17 +23,13 @@
 #### 1、安装必要的软件包。
 
 ```shell
-yum install -y epel-release 
-yum install -y net-tools
-yum install -y vim
-
+sudo yum install -y epel-release;sudo yum install -y net-tools;sudo yum install -y vim;sudo yum -y install rsync;
 ```
 
 #### 2 、关闭防火墙。
 
 ```shell
-systemctl stop firewalld
-systemctl disable firewalld.service
+sudo systemctl stop firewalld;sudo systemctl disable firewalld.service
 ```
 
 #### 3、将atguigu放入sudoers中
@@ -55,10 +51,7 @@ atguigu ALL=(ALL) NOPASSWD:ALL
 #### 4、创建目录
 
 ```shell
-mkdir /opt/module
-mkdir /opt/software
- chown atguigu:atguigu /opt/module
- chown atguigu:atguigu /opt/software
+sudo mkdir /opt/module;sudo mkdir /opt/software;sudo chown atguigu:atguigu /opt/module;sudo chown atguigu:atguigu /opt/software
 ```
 
 #### 5、关闭机器，**新建桥接网卡**，保证物理机能ping通虚拟机。
@@ -68,9 +61,9 @@ mkdir /opt/software
 ```shell
 vim /etc/hosts
 添加如下内容
-172.37.4.198 hadoop104
-172.37.4.201 hadoop103
-172.37.4.202 hadoop104
+172.37.5.9 hadoop102
+172.37.5.14 hadoop103
+172.37.5.15 hadoop104
 ```
 
 修改物理机的配置文件
@@ -95,7 +88,7 @@ jdk-8u291-linux-x64.tar.gz
 #### 3、然后解压
 
 ```shell
-tar -zxvf jdk-8u291-linux-x64.tar.gz -C /opt/module
+tar -xvf jdk-8u291-linux-x64.tar.gz -C /opt/module
 ```
 
 #### 4、配置jdk环境变量
@@ -214,7 +207,7 @@ then
     exit;
 fi
 #2. 遍历集群所有机器
-for host in hadoop104 hadoop103 hadoop104
+for host in hadoop102 hadoop103 hadoop104
 do
     echo ==================== $host ====================
     #3. 遍历所有目录,挨个发送
@@ -253,9 +246,9 @@ sudo cp xsync /bin/
 ```shell
 ## 生成公钥和私钥
 cd ~/.ssh
-ssh-kengen -t rsa
+ssh-keygen -t rsa
 ## 拷贝
-ssh-copy-id hadoop104
+ssh-copy-id hadoop102
 ssh-copy-id hadoop103
 ssh-copy-id hadoop104
 ```
@@ -272,7 +265,7 @@ hadoop104;
 
 4.1 集群部署规划
 
-|      | hadoop104         | hadoop103                   | hadoop104                  |
+|      | hadoop102         | hadoop103                   | hadoop104                  |
 | ---- | ----------------- | --------------------------- | -------------------------- |
 | HDFS | NameNode,DataNode | DataNode                    | SecondaryNameNode,DataNode |
 | YARN | NodeManager       | ResourceManager,NodeManager | NodeManager                |
@@ -308,7 +301,7 @@ vim core-site.xml
     <!-- 指定 NameNode 的地址 -->
     <property>
         <name>fs.defaultFS</name>
-        <value>hdfs://hadoop104:8020</value>
+        <value>hdfs://hadoop102:8020</value>
     </property>
     <!-- 指定 hadoop 数据的存储目录 -->
     <property>
@@ -334,7 +327,7 @@ vim core-site.xml
     <!-- nn web 端访问地址-->
     <property>
         <name>dfs.namenode.http-address</name>
-        <value>hadoop104:9870</value>
+        <value>hadoop102:9870</value>
     </property>
     <!-- 2nn web 端访问地址-->
     <property>
@@ -399,7 +392,7 @@ xsync /opt/module/hadoop-3.1.3/etc/hadoop/
 ## 配置workers
 vim /opt/module/hadoop-3.1.3/etc/hadoop/workers
 ### 注意:该文件中添加的内容结尾不允许有空格,文件中不允许有空行。
-hadoop104
+hadoop102
 hadoop103
 hadoop104
 ### 同步所有节点配置文件
@@ -409,13 +402,13 @@ xsync /opt/module/hadoop-3.1.3/etc
 (1)如果是第一次启动
 
 ```shell
-hadoop104机器上:hdfs namenode -format
+hadoop102机器上:hdfs namenode -format
 ```
 
 (2)启动hdfs
 
 ```shell
-hadoop104 sbin/start-dfs.sh
+hadoop102 sbin/start-dfs.sh
 ```
 
 (3)启动yarn
@@ -426,7 +419,7 @@ hadoop103 sbin/start-yarn.sh
 
 hdfs:namenode
 
-http://hadoop104:9870
+http://hadoop102:9870
 
 yarn:resourceManager
 
@@ -479,7 +472,7 @@ vim yarn-site.xml
 <!-- 设置日志聚集服务器地址 -->
 <property>
 <name>yarn.log.server.url</name>
-<value>http://hadoop104:19888/jobhistory/logs</value>
+<value>http://hadoop102:19888/jobhistory/logs</value>
 </property>
 <!-- 设置日志保留时间为 7 天 -->
 <property>
@@ -503,7 +496,7 @@ hadoop jar share/hadoop/mapreduce/hadoop-mapreduce-examples-3.1.3.jar wordcount 
 #### 8、编写hadoop集群常用脚本
 
 ```shell
-hadoop104 cd /home/atguigu/bin
+hadoop102 cd /home/atguigu/bin
 vim myhadoop.sh
 
 
@@ -518,7 +511,7 @@ case $1 in
 "start")
         echo " =================== 启动 hadoop 集群 ==================="
         echo " --------------- 启动 hdfs ---------------"
-        ssh hadoop104 "/opt/module/hadoop-3.1.3/sbin/start-dfs.sh"
+        ssh hadoop102 "/opt/module/hadoop-3.1.3/sbin/start-dfs.sh"
         echo " --------------- 启动 yarn ---------------"
         ssh hadoop103 "/opt/module/hadoop-3.1.3/sbin/start-yarn.sh"
         echo " --------------- 启动 historyserver ---------------"
@@ -527,7 +520,7 @@ case $1 in
 "stop")
         echo " =================== 关闭 hadoop 集群 ==================="
         echo " --------------- 关闭 historyserver ---------------"
-        ssh hadoop104 "/opt/module/hadoop-3.1.3/bin/mapred --daemon stop historyserver"
+        ssh hadoop102 "/opt/module/hadoop-3.1.3/bin/mapred --daemon stop historyserver"
         echo " --------------- 关闭 yarn ---------------"
         ssh hadoop103 "/opt/module/hadoop-3.1.3/sbin/stop-yarn.sh"
         echo " --------------- 关闭 hdfs ---------------"
@@ -548,7 +541,7 @@ vim jpsall
 
 
 #!/bin/bash
-for host in hadoop104 hadoop103 hadoop104
+for host in hadoop102 hadoop103 hadoop104
 do
               echo "=============== $host ==============="
               ssh $host jps
