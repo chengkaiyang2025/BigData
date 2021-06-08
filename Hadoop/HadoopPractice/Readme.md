@@ -61,9 +61,9 @@ sudo mkdir /opt/module;sudo mkdir /opt/software;sudo chown atguigu:atguigu /opt/
 ```shell
 vim /etc/hosts
 添加如下内容
-172.37.5.9 hadoop102
-172.37.5.14 hadoop103
-172.37.5.15 hadoop104
+172.37.5.37 hadoop102
+172.37.5.35 hadoop103
+172.37.5.36 hadoop104
 ```
 
 修改物理机的配置文件
@@ -81,7 +81,7 @@ vim /etc/hosts
 #### 2、首先将jdk放入 /opt/software
 
 ```shell
-[atguigu@hadoop104 ~]$ ll /opt/software
+[atguigu@hadoop102 ~]$ ll /opt/software
 jdk-8u291-linux-x64.tar.gz
 ```
 
@@ -229,7 +229,7 @@ do
 done
 ```
 
-``` shell
+```shell
 ## 修改脚本xsync具有执行权限
 [atguigu@hadoop104 bin] $ chmod +x xsync
 ## 测试脚本
@@ -287,6 +287,21 @@ core-site.xml,hdfs-site.xml,yarn-site.xml,mapred-site.xml存放在$HADOOP/etc/ha
 
 4.3 配置集群
 
+```shell
+## 配置workers
+vim /opt/module/hadoop-3.1.3/etc/hadoop/workers
+### 注意:该文件中添加的内容结尾不允许有空格,文件中不允许有空行。
+hadoop102
+hadoop103
+hadoop104
+```
+
+```shell
+xsync /opt/module/jdk1.8.0_291/
+xsync /opt/software/hadoop-3.1.3.tar.gz
+
+
+```
 (1) 核心配置文件 core-site.xml
 
 ```shell
@@ -358,7 +373,7 @@ vim core-site.xml
     <!-- 环境变量的继承 -->
     <property>
         <name>yarn.nodemanager.env-whitelist</name>
- 			<value>JAVA_HOME,HADOOP_COMMON_HOME,HADOOP_HDFS_HOME,HADOOP_CONF_DIR,CLASSPATH_PREPEND_DISTCACHE,HADOOP_YARN_HOME,HADOOP_MAP RED_HOME</value>
+ 			<value>JAVA_HOME,HADOOP_COMMON_HOME,HADOOP_HDFS_HOME,HADOOP_CONF_DIR,CLASSPATH_PREPEND_DISTCACHE,HADOOP_YARN_HOME,HADOOP_MAPRED_HOME</value>
     </property>
 </configuration>
 
@@ -383,21 +398,12 @@ vim core-site.xml
 (5) 分发配置文件
 
 ```shell
+
 xsync /opt/module/hadoop-3.1.3/etc/hadoop/
 ```
 
 #### 5、群起集群
 
-```shell
-## 配置workers
-vim /opt/module/hadoop-3.1.3/etc/hadoop/workers
-### 注意:该文件中添加的内容结尾不允许有空格,文件中不允许有空行。
-hadoop102
-hadoop103
-hadoop104
-### 同步所有节点配置文件
-xsync /opt/module/hadoop-3.1.3/etc
-```
 
 (1)如果是第一次启动
 
@@ -455,7 +461,8 @@ vim mapred-site.xml
 </property>
 ## 分发配置
 xsync $HADOOP_HOME/etc/hadoop/mapred-site.xml
-在hadoop0启动：mapred --daemon start historyserver
+
+在hadoop104启动：mapred --daemon start historyserver
 ```
 
 8、配置日志聚集
@@ -547,8 +554,8 @@ do
               ssh $host jps
 done
 
-chmod +x jpsall
 ```
+chmod +x jpsall
 
 ```shell
 ## 同步脚本
