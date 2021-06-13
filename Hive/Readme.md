@@ -555,6 +555,76 @@ current row:当前行
 n preceding:往前n行数据
 n following：往后n行数据
 unbounded：
+	unbounded preceding 表示从前面的起点
+	unbounded following 表示从后面的终点
+lag(col,n,default)往前n行
+lead(col,n,default)往后n行
+```
+
+
+
+business.txt
+
+name,orderdate,cost
+
+```csv
+jack,2017-01-01,10
+tony,2017-01-02,15
+jack,2017-02-03,23
+tony,2017-01-04,29
+jack,2017-01-05,46
+jack,2017-04-06,42
+tony,2017-01-07,50
+jack,2017-01-08,55
+mart,2017-04-08,62
+mart,2017-04-09,68
+neil,2017-05-10,12
+mart,2017-04-11,75
+neil,2017-06-12,80
+mart,2017-04-13,94
+```
+
+需求
+
+```sql
+-- 建表语句
+create table business(name string,orderdate string,cost int)
+row format delimited fields terminated by ',';
+-- 导入本地csv数据
+load data local inpath '/opt/module/hive/datas/business.txt' overwrite into table business;
+create database if not exists tmp;
+--（1）	查询在 2017 年 4 月份购买过的顾客及总人数
+drop table if exists tmp.business_1;
+create table tmp.business_1 as 
+select name,count(1) over() from business where substr(orderdate,1,7) = '2017-04' group by name;
+--（2）	查询顾客的购买明细及月购买总额
+drop table if exists tmp.business_2;
+create table tmp.business_2 as
+select 
+name,orderdate,cost,
+sum(cost) over(partition by name,substr(orderdate,1,7))
+from business;
+--（3）	上述的场景, 将每个顾客的cost 按照日期进行累加
+drop table if exists tmp.business_3;
+create table tmp.business_3 as
+select
+name,orderdate,cost,
+sum(cost) over(partition by name order by orderdate),--每天累加
+sum(cost) over(partition by name order by orderdate rows between unbounded preceding and current row),--与上面的结果一样，都是计算每天累加的数据
+sum(cost) over(partition by name order by orderdate rows between 1 preceding and current row),--近两次的累计结果
+sum(cost) over(partition by name order by orderdate rows between 2 preceding and current row)--
+近三次的累计结果
+from business;
+--（4）	查询每个顾客上次的购买时间
+drop table tmp.business_4;
+create table tmp.business_4
+select name,orderdate,cost
+lag(orderdate,1,'1900-01-01') over(partition by name order by orderdate) as t1,
+lag(orderdate,2,'1900-01-01') over(partition by name order by orderdate) as t2
+from business;
+
+--（5）	查询前 20%时间的订单信息
+
 ```
 
 
