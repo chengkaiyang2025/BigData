@@ -9,14 +9,14 @@
 
 
 ```xml
-士大夫
+hive-site.xml
 <?xml version="1.0"?>
 <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
 <configuration>
 <!-- jdbc 连接的 URL -->
 <property>
 <name>javax.jdo.option.ConnectionURL</name>
-<value>jdbc:mysql://hadoop102:3306/metastore?useSSL=false</value>
+<value>jdbc:mysql://192.168.1.8:3306/metastore?useSSL=false</value>
 </property>
 <!-- jdbc 连接的 Driver-->
 <property>
@@ -31,7 +31,7 @@
 <!-- jdbc 连接的 password -->
 <property>
 <name>javax.jdo.option.ConnectionPassword</name>
-<value>000000</value>
+<value>root</value>
 </property>
 <!-- Hive 元数据存储版本的验证 -->
 <property>
@@ -93,12 +93,12 @@ https://kontext.tech/column/hadoop/415/hive-exception-in-thread-main-javalangnos
 <!-- 指定存储元数据要连接的地址 -->
 <property>
 <name>hive.metastore.uris</name>
-<value>thrift://hadoop102:9083</value>
+<value>thrift://192.168.1.8:9083</value>
 </property>
 <!-- 指定 hiveserver2 连接的 host -->
 <property>
 <name>hive.server2.thrift.bind.host</name>
-<value>hadoop102</value>
+<value>192.168.1.8</value>
 </property>
 <!-- 指定 hiveserver2 连接的端口号 -->
 <property>
@@ -501,9 +501,61 @@ load data inpath '/input/student.txt' into table stu_buck;
 
 不要使用本地模式，避免找不到数据。
 
+# 第八章 函数
+
+## 8.2、常用内置函数
+
+### 8.2.4、列转行
+
+explode(col)
+
+lateral view
+
+movie category 《疑犯追踪》 悬疑,动作,科幻,剧情 《Lie to me》 悬疑,警匪,动作,心理,剧情 《战狼2》 战争,动作,灾难 
+
+movie_info.txt
+
+```tsv
+《疑犯追踪》	悬疑,动作,科幻,剧情
+《Lie to me》	悬疑,警匪,动作,心理,剧情
+《战狼2》	战争,动作,灾难
+```
+
+```sql
+create table movie_info(movie string,category string
+)
+row format delimited fields terminated by '\t';
+load data local inpath '/opt/module/hive/datas/movie_info.txt' overwrite into table movie_info;
+```
+
+```sql
+# desc function explode
+explode(a) - separates the elements of array a into multiple rows, or the elements of a map into multiple rows and columns
+
+# explode比较简单，直接将list或者map等集合类型炸裂成多行，如：
+select explode(split(category,',')) from movie_info;
 
 
+# 炸裂出
+select movie,category_name
+from movie_info 
+lateral view explode(split(category,',')) movie_info_temp as category_name;
 
+
+```
+
+### 8.2.5 开窗函数
+
+sum()/count()/rank()/row_number/lag **over()** 
+
+over：制定分析函数工作的窗口大小，这个数据窗口大小可能随着行的变化而变化。
+
+```shell
+current row:当前行
+n preceding:往前n行数据
+n following：往后n行数据
+unbounded：
+```
 
 
 
