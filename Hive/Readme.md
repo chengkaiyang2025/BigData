@@ -561,8 +561,6 @@ lag(col,n,default)往前n行
 lead(col,n,default)往后n行
 ```
 
-
-
 business.txt
 
 name,orderdate,cost
@@ -627,7 +625,28 @@ from business;
 
 ```
 
+## 8.4、自定义UDF函数
 
+继承GenericUDF方法。
+
+```shell
+# 添加jar路径
+add jar /opt/module/hive/lib_user/hive-demo-1.0-SNAPSHOT-jar-with-dependencies.jar
+```
+
+
+
+```sql
+
+-- 创建function
+create function default.my_len as "com.atguigu.udf.MyUDF";
+select ename,my_len(ename) ename_len from emp; 
+select name,my_len(name)  from business; 
+```
+
+
+
+ 
 
 
 
