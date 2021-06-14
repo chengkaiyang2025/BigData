@@ -632,6 +632,7 @@ from business;
 ```shell
 # 添加jar路径
 add jar /opt/module/hive/lib_user/hive-demo-1.0-SNAPSHOT-jar-with-dependencies.jar
+add jar /opt/module/hive/lib/hive-demo-1.0-SNAPSHOT.jar
 ```
 
 
