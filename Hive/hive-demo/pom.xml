@@ -24,6 +24,12 @@
             <artifactId>hadoop-client</artifactId>
             <version>3.1.3</version>
         </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.1</version>
+            <scope>test</scope>
+        </dependency>
 
     </dependencies>
     <!--声明但不引入依赖-->
