@@ -28,6 +28,14 @@ object Test08_Practice {
     def fun3(i:Int): String => (Char => Boolean) = {
       s => c=> if(i == 0 && s == "" && c == '0') true else false
     }
+    println("lambda--------")
+    println(fun3(0)("")('0'))
+    println(fun3(1)("")('0'))
     // 4、单一参数的嵌套函数
+    def fun4(i: Int)(s: String)(c: Char) = {
+      if( i == 0 && s == "" && c == '0') true else false
+    }
+    println("--------------")
+    println(fun4(0)("")('0'))
   }
 }
