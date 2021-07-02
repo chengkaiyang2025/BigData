@@ -1,5 +1,5 @@
 package com.atguigu.chapter06
-·
+
 import scala.beans.BeanProperty
 
 /**
