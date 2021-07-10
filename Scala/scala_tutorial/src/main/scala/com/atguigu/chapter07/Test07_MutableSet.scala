@@ -1,5 +1,5 @@
 package com.atguigu.chapter07
 
-object Test07_MutableMap {
+object Test07_MutableSet {
 
 }
