@@ -26,9 +26,24 @@ object Test14_HighLevelFunction_Map {
     }))
 
     val strings = List("hello world","hello tom","hello jerry","hello wsn")
-    strings.flatMap("")
+    println(strings.flatMap(_.split(" ")))
     //分组group by
     //
+    val list = strings.flatMap(_.split(" "))
+    println(list)
+    val stringToStrings = list.groupBy(data => data)
+    println(stringToStrings.map((data) => {
+      data._1 +":"+ data._2.length
+    }))
+//    println(stringToStrings)
     //
+    val functionToMap = strings.flatMap(_.split(" "))
+      .map((data:String) => {
+        if (data.startsWith("w")) "male" else "female"
+      }).groupBy(data => data)
+      .map((data) => {
+        s"${data._1} is ${data._2.length``                                                }"
+      })
+    println(functionToMap)
   }
 }
