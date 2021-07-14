@@ -42,7 +42,7 @@ object Test14_HighLevelFunction_Map {
         if (data.startsWith("w")) "male" else "female"
       }).groupBy(data => data)
       .map((data) => {
-        s"${data._1} is ${data._2.length``                                                }"
+        s"${data._1} is ${data._2.length}"
       })
     println(functionToMap)
   }
