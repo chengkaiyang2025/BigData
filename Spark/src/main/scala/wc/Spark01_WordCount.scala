@@ -9,8 +9,17 @@ object Spark01_WordCount {
     val sc = new SparkContext(sparkConf)
 
     val lines:RDD[String] = sc.textFile("src/main/resources/datas.txt")
-    val strings = lines.collect()
-    strings.foreach(println)
+
+    val value = lines.flatMap(l => {
+      l.split(",")
+    }).groupBy(t=>t)
+    val value1 = value.map {
+      case (w, l) => {
+        (w, l.size)
+      }
+    }
+    val tuples = value1.collect()
+    tuples.foreach(println)
     sc.stop()
 
   }
