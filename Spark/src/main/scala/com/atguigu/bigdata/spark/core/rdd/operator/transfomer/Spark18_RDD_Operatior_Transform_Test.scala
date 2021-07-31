@@ -3,18 +3,28 @@ package com.atguigu.bigdata.spark.core.rdd.operator.transfomer
 import org.apache.spark.{SparkConf, SparkContext}
 
 /**
- *交集并集补集
+ *求出单词最多的
  */
-object Spark16_RDD_Operatior_Transform_Test {
+object Spark18_RDD_Operatior_Transform_Test {
   def main(args: Array[String]): Unit = {
     val conf = new SparkConf().setMaster("local[*]").setAppName("RDD")
     val sc = new SparkContext(conf)
+
     val rdd = sc.makeRDD(List(
-      ("abc", 1), ("efg", 2), ("abc", 1), ("hbd", 11)
+
+      ("a", 1), ("a", 2), ("b", 3),
+      ("b", 4), ("b", 5), ("a", 6)
     ))
-    rdd.groupBy(t => t._1,2)
-      .collect().foreach(println)
+    rdd.aggregateByKey((0,0))(
+      (t,v) => {
+        (t._1+v,t._2+1)
+      },
+      (t1, t2) => {
+        (t1._1 + t2._1, t1._1+t2._2)
+      }
+    ).collect().foreach(println)
     sc.stop()
+
   }
 
 }
