@@ -15,14 +15,16 @@ object Spark18_RDD_Operatior_Transform_Test {
       ("a", 1), ("a", 2), ("b", 3),
       ("b", 4), ("b", 5), ("a", 6)
     ))
-    rdd.aggregateByKey((0,0))(
-      (t,v) => {
-        (t._1+v,t._2+1)
+    rdd.aggregateByKey((0, 0))(
+      (t, v) =>{
+        (t._1 + v,t._2 + 1)
       },
       (t1, t2) => {
-        (t1._1 + t2._1, t1._1+t2._2)
+        (t1._1 + t2._1,t2._2 + t1._2)
       }
-    ).collect().foreach(println)
+    ).mapValues{
+      case (t,v) => t/v
+    }.collect().foreach(println)
     sc.stop()
 
   }
