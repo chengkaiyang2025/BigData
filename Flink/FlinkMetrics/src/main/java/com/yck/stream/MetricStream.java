@@ -41,7 +41,7 @@ public class MetricStream {
             }
         });
         SingleOutputStreamOperator<Tuple2<String, String>> sum = source.keyBy(k -> k.f0)
-                .countWindow(10).sum(1)
+                .countWindow(10).sum(1).setParallelism(2)
                 .map(new MyMapperCount());
         sum.print();
         env.execute();
