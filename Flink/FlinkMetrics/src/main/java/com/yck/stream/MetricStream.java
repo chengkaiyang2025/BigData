@@ -1,5 +1,6 @@
 package com.yck.stream;
 
+import com.yck.stream.metric.MyMapperCount;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
@@ -18,7 +19,7 @@ public class MetricStream {
             @Override
             public void run(SourceContext<Tuple2<String, Integer>> sourceContext) throws Exception {
                 while (!isCancel){
-                    Thread.sleep(1000);
+                    Thread.sleep(10);
                     int i = r.nextInt(5);
                     String key = "";
                     switch (i){
@@ -39,7 +40,9 @@ public class MetricStream {
                 isCancel = true;
             }
         });
-        SingleOutputStreamOperator<Tuple2<String, Integer>> sum = source.keyBy(k -> k.f0).countWindow(5).sum(1);
+        SingleOutputStreamOperator<Tuple2<String, Integer>> sum = source.keyBy(k -> k.f0)
+                .countWindow(10).sum(1)
+                .map(new MyMapperCount());
         sum.print();
         env.execute();
     }
