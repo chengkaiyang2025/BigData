@@ -2,6 +2,7 @@ package com.yck.stream;
 
 import com.yck.stream.metric.MyMapperCount;
 import com.yck.stream.metric.MyMapperGauge;
+import com.yck.stream.metric.MyMapperHistogram;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
@@ -41,7 +42,7 @@ public class MetricStream {
                 isCancel = true;
             }
         });
-        SingleOutputStreamOperator<Tuple2<String, String>> sum = source.keyBy(k -> k.f0)
+        SingleOutputStreamOperator<Tuple2<String, String>> sum = source.map(new MyMapperHistogram()).keyBy(k -> k.f0)
                 .countWindow(10).sum(1).setParallelism(2)
                 .map(new MyMapperGauge()).map(new MyMapperCount());
         sum.print();
