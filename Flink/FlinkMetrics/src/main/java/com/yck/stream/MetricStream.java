@@ -8,6 +8,8 @@ import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.functions.source.SourceFunction;
+import org.apache.flink.streaming.api.windowing.assigners.TumblingProcessingTimeWindows;
+import org.apache.flink.streaming.api.windowing.time.Time;
 
 import java.util.Random;
 
@@ -17,11 +19,11 @@ public class MetricStream {
         env.setParallelism(1);
         DataStreamSource<Tuple2<String, Integer>> source = env.addSource(new SourceFunction<Tuple2<String, Integer>>() {
             private Boolean isCancel = false;
-            private Random r = new Random();
+            private final Random r = new Random();
             @Override
             public void run(SourceContext<Tuple2<String, Integer>> sourceContext) throws Exception {
                 while (!isCancel){
-                    Thread.sleep(10);
+//                    Thread.sleep(10);
                     int i = r.nextInt(5);
                     String key = "";
                     switch (i){
@@ -42,8 +44,8 @@ public class MetricStream {
                 isCancel = true;
             }
         });
-        SingleOutputStreamOperator<Tuple2<String, String>> sum = source.map(new MyMapperHistogram()).keyBy(k -> k.f0)
-                .countWindow(10).sum(1).setParallelism(2)
+        SingleOutputStreamOperator<Tuple2<String, String>> sum = source.map(new MyMapperHistogram())
+                .keyBy(k -> k.f0).window(TumblingProcessingTimeWindows.of(Time.hours(1))).sum(1).setParallelism(2)
                 .map(new MyMapperGauge()).map(new MyMapperCount());
         sum.print();
         env.execute();
