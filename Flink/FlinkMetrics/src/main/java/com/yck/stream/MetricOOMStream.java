@@ -19,7 +19,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-public class MetricStream {
+public class MetricOOMStream {
     public static void main(String[] args) throws Exception {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(1);
@@ -29,7 +29,7 @@ public class MetricStream {
             @Override
             public void run(SourceContext<Tuple2<String, Integer>> sourceContext) throws Exception {
                 while (!isCancel){
-//                    Thread.sleep(10);
+//                    Thread.sleep(1);
                     int i = r.nextInt(5);
                     String key = "";
                     switch (i){
@@ -40,7 +40,7 @@ public class MetricStream {
                         case 4: key = "William"; break;
                     }
                     Tuple2<String, Integer> re = new Tuple2<>();
-                    re.f0 = key;re.f1 = r.nextInt(100);
+                    re.f0 = key;re.f1 = r.nextInt();
                     sourceContext.collect(re);
                 }
             }
@@ -51,7 +51,30 @@ public class MetricStream {
             }
         });
         SingleOutputStreamOperator<Tuple2<String, String>> sum = source.map(new MyMapperHistogram())
-                .keyBy(k -> k.f0).window(TumblingProcessingTimeWindows.of(Time.hours(1))).sum(1).setParallelism(2)
+                .keyBy(k -> k.f0)
+                // 修改开窗时间，引发不同的gc
+                .window(TumblingProcessingTimeWindows.of(Time.seconds(60)))
+                .apply(new WindowFunction<Tuple2<String, Integer>, Tuple2<String, Integer>, String, TimeWindow>() {
+                    @Override
+                    public void apply(String s, TimeWindow timeWindow, Iterable<Tuple2<String, Integer>> iterable, Collector<Tuple2<String, Integer>> collector) throws Exception {
+                        List<Tuple2<String,Integer>> a = new ArrayList<>();
+                        Iterator<Tuple2<String, Integer>> iterator = iterable.iterator();
+                        while (iterator.hasNext()){
+                            a.add(iterator.next());
+                        }
+                        System.out.println(a.size());
+                        for (int i = 0; i < a.size(); i++) {
+                            Tuple2<String, Integer> str = a.get(i);
+                            str.f1 = str.f1+1;
+                            // 这一步会生成很多String constant，促使常量池变大
+                            str.f0 = str.f0 + str.f1;
+                            a.set(i,str);
+                        }
+                        Random r = new Random();
+                        collector.collect(a.get(r.nextInt(a.size())));
+                    }
+                })
+                .setParallelism(2)
                 .map(new MyMapperGauge()).map(new MyMapperCount());
         sum.print();
         env.execute();

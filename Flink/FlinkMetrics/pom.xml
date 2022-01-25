@@ -153,7 +153,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>com.yck.stream.MetricStream</mainClass>
+                            <mainClass>com.yck.stream.MetricOOMStream</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
