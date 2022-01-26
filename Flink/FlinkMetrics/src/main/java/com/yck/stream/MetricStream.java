@@ -19,6 +19,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * 由于sum实现的是reduce方法，所以不会引发old gc，只是引发young gc，而且时间非常短
+ */
 public class MetricStream {
     public static void main(String[] args) throws Exception {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
@@ -51,7 +54,7 @@ public class MetricStream {
             }
         });
         SingleOutputStreamOperator<Tuple2<String, String>> sum = source.map(new MyMapperHistogram())
-                .keyBy(k -> k.f0).window(TumblingProcessingTimeWindows.of(Time.hours(1))).sum(1).setParallelism(2)
+                .keyBy(k -> k.f0).window(TumblingProcessingTimeWindows.of(Time.minutes(1))).sum(1).setParallelism(2)
                 .map(new MyMapperGauge()).map(new MyMapperCount());
         sum.print();
         env.execute();
