@@ -32,7 +32,7 @@ public class MetricStream {
             @Override
             public void run(SourceContext<Tuple2<String, Integer>> sourceContext) throws Exception {
                 while (!isCancel){
-//                    Thread.sleep(10);
+                    Thread.sleep(10);
                     int i = r.nextInt(5);
                     String key = "";
                     switch (i){
