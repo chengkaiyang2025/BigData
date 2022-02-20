@@ -32,7 +32,7 @@ public class MetricStream {
             @Override
             public void run(SourceContext<Tuple2<String, Integer>> sourceContext) throws Exception {
                 while (!isCancel){
-                    Thread.sleep(10);
+                    Thread.sleep(5);
                     int i = r.nextInt(5);
                     String key = "";
                     switch (i){
@@ -53,9 +53,15 @@ public class MetricStream {
                 isCancel = true;
             }
         });
-        SingleOutputStreamOperator<Tuple2<String, String>> sum = source.map(new MyMapperHistogram())
-                .keyBy(k -> k.f0).window(TumblingProcessingTimeWindows.of(Time.minutes(1))).sum(1).setParallelism(2)
-                .map(new MyMapperGauge()).map(new MyMapperCount());
+        SingleOutputStreamOperator<Tuple2<String, String>> sum =
+                source.name("随机生成学生语文成绩")
+                .map(new MyMapperHistogram()).name("生成热力图")
+                .keyBy(k -> k.f0)
+                .window(TumblingProcessingTimeWindows.of(Time.minutes(1)))
+                .sum(1).name("按照学生求和")
+                .setParallelism(2)
+                .map(new MyMapperGauge()).name("成绩大于500")
+                .map(new MyMapperCount()).name("打印输出");
         sum.print();
         env.execute();
     }
