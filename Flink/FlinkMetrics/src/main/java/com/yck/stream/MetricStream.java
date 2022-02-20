@@ -54,15 +54,15 @@ public class MetricStream {
             }
         });
         SingleOutputStreamOperator<Tuple2<String, String>> sum =
-                source.name("随机生成学生语文成绩")
-                .map(new MyMapperHistogram()).name("生成热力图")
+                source.name("Generate Student's score by random")
+                .map(new MyMapperHistogram()).name("Generate Histogram graph")
                 .keyBy(k -> k.f0)
                 .window(TumblingProcessingTimeWindows.of(Time.minutes(1)))
-                .sum(1).name("按照学生求和")
+                .sum(1).name("Get the sum of score by student")
                 .setParallelism(2)
-                .map(new MyMapperGauge()).name("成绩大于500")
-                .map(new MyMapperCount()).name("打印输出");
-        sum.print();
+                .map(new MyMapperGauge()).name("Filter the score that up to 500")
+                .map(new MyMapperCount()).name("Beautify the output of the result");
+        sum.print().name("Print the result");
         env.execute();
     }
 }
