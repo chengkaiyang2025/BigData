@@ -134,7 +134,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>com.yck.Test1</mainClass>
+                            <mainClass>com.yck.TestTableAPI</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

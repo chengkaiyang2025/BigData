@@ -5,7 +5,7 @@ import org.apache.flink.connector.datagen.table.DataGenConnectorOptions;
 import org.apache.flink.table.api.*;
 
 
-public class Test1 {
+public class TestTableAPI {
     public static void main(String[] args) {
 // Create a TableEnvironment for batch or streaming execution.
 // See the "Create a TableEnvironment" section for details.
@@ -28,7 +28,7 @@ public class Test1 {
                 .build());
 
 // Create a sink table (using SQL DDL)
-        tableEnv.executeSql("CREATE TEMPORARY TABLEk SinkTable (product STRING) WITH ('connector' = 'print') ");
+        tableEnv.executeSql("CREATE TEMPORARY TABLE SinkTable WITH ('connector' = 'print') LIKE SourceTable (EXCLUDING OPTIONS) ");
 
 // Create a Table object from a Table API query
         Table table2 = tableEnv.from("SourceTable");
