@@ -1,0 +1,7 @@
+# Canal log 错误日志告警
+#foreach ( $info in $errorBeans )
+- **告警机器: $info.ip , 报错日志文件个数: $info.errorLogs.size()**
+#end
+**详情请查看邮件**
+#foreach ( $at in $atList ) @$at #end
+

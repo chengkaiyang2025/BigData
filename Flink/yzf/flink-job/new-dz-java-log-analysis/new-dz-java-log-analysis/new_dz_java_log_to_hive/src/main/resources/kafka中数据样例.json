@@ -1,0 +1,32 @@
+{
+    "@timestamp": "2021-11-16T08:05:17.135Z",
+    "@metadata": {
+      "beat": "filebeat",
+      "type": "doc",
+      "version": "6.5.4",
+      "topic": "yzf_daizhang_set10"
+    },
+    "message": "2021-11-16 16:05:16,338 [TID:[Ignored Trace]] [INFO] [http-nio-8202-exec-16] c.y.f.t.w.i.PreInterceptor [PreInterceptor.java : 34] 请求信息：URL : http://172.16.120.31:8202/taskStatusCheckProcess\nMETHOD : POST\nAddress : 10.202.3.154\nHeaderInfo :\n\tsw8 : \n\tsw8-correlation : \n\tsw8-x : 0-\n\taccept : */*\n\tuser-agent : Java/1.8.0_202\n\thost : 172.16.120.31:8202\n\tconnection : keep-alive\nParameters : taskScheduleId=910105597678161921\n用户信息：{\"userId\":0}",
+    "source": "/data/fintax-task-service/logs/fintax-task-service.log",
+    "offset": 392421002,
+    "log": {
+      "flags": ["multiline"]
+    },
+    "fields": {
+      "ip": "172.16.120.10",
+      "set": "newtask",
+      "module": "task-center",
+      "apptype": "tomcat",
+      "log_item": "biz",
+      "log_es_index": "zhongtai_task-java"
+    },
+    "beat": {
+      "name": "VM-120-31-centos",
+      "hostname": "VM-120-31-centos",
+      "version": "6.5.4"
+    },
+    "host": {
+      "name": "VM-120-31-centos"
+    }
+
+}

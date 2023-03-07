@@ -1,0 +1,35 @@
+CREATE TABLE log_ods.new_dz_nginx_log (
+    request                   string not null comment '请求链接',
+    n_offset                  bigint not null comment '偏移量',
+    base_url                  string comment '请求链接_链接路径',
+    upstream_addr_nm          string comment '负载均衡地址nm',
+    request_length            string comment '请求长度',
+    http_cookie               string comment 'cookie',
+    fields_log_es_index       string comment '值为fintax-web表示新代账',
+    fields_log_item           string comment '',
+    fields_apptype            string comment '字段应用类型',
+    fields_set                string comment '该字段为null则是新代账',
+    http_referer              string comment 'http_referer',
+    remote_addrx              string comment '远程地址',
+    remote_user               string comment '远程用户',
+    scheme                    string comment '模式',
+    body_bytes_sent           string comment '发送体大小',
+    status                    string comment '返回状态',
+    host_name                 string comment '主机名',
+    x_forwarded_for           string comment '转发地址',
+    nginx                     string comment 'nginx地址',
+    proxy_add_x_forwarded_for string comment '代理转发地址',
+    beat_hostname             string comment 'beat主机名',
+    beat_name                 string comment 'beat名',
+    beat_version              string comment 'beat版本',
+    source                    string comment '源',
+    time_local                string comment '请求时间',
+    http_user_agent           string comment 'http用户代理',
+    upstream_addr             string comment '负载均衡地址',
+    request_time              double comment '请求返回时间',
+    ssl_cipher                string comment 'ssl密码',
+    PRIMARY KEY (request,n_offset)
+)
+partition by hash(request,n_offset) partitions 14
+COMMENT '新代账日志分析'
+STORED AS kudu;

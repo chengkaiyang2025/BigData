@@ -1,0 +1,14 @@
+<html>
+<body>
+#foreach($info in $errorBeans)
+  <h1>$info.ip</h1>
+  #foreach($map in $info.errorLogs.entrySet())
+    <h2>日志文件: $!{map.key} 报错:</h2>
+    #foreach($err in $!{map.value})
+        <code>$err ...</code><br>
+        <br>
+    #end
+  #end
+#end
+</body>
+</html>

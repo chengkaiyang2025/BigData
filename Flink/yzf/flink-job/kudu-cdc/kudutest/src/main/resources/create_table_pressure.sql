@@ -1,0 +1,266 @@
+--DROP TABLE IF EXISTS octopus_ods.octopus_qushu_table_narrow_202106;
+--CREATE TABLE  octopus_ods.octopus_qushu_table_narrow_202106 (
+--id string not null comment 'hbase中的rowkey',  -- 840244025863835648_2021_4_778944412830113793_778944412834308097_sheet1,
+--cell_location string not null comment '格子的坐标如A1',
+--cell_is_change string  comment '格子是否变换',
+--cell_value string comment '格子的值',
+--PRIMARY KEY (id,cell_location)
+--)
+--partition by hash(id,cell_location) partitions 14
+--COMMENT '新代账hbase实时同步指标值表 2021第2季度'
+--stored as kudu;
+--
+-----------------------------------------
+--
+--DROP TABLE IF EXISTS octopus_ods.octopus_qushu_table_wide_202106;
+--CREATE TABLE  octopus_ods.octopus_qushu_table_wide_202106 (
+--id string not null comment 'hbase中的rowkey',  -- 840244025863835648_2021_4_778944412830113793_778944412834308097_sheet1,
+--cell_location string not null comment '格子的坐标如A1',
+--cell_is_change string  comment '格子是否变换',
+--cell_value string comment '格子的值',
+--area_id string comment '区域id',  -- 0,
+--area_name string comment '区域名称',  --全国,
+--box_id string comment 'boxid', -- 778944412830113793,
+--create_time string comment '创建时间',  -- 2021-05-13215:21:50,
+--dz_qy_id string comment '代账公司id',  -- 722839913816526849,
+--dz_qy_name string comment '代账公司名称',  -- 测试,
+--fetch_data_time bigint comment '取数时间',  -- 1620804083847,
+--kjnd string comment '会计年度',  -- 2021,
+--kjqj string comment '会计期间',  -- 4,
+--nsqxdm string comment '纳税期限代码',  -- 4,
+--parent_box_id string comment '上级boxid',  -- 778941549412327424,
+--qy_id string comment '企业id',  -- 840244025863835648,
+--qy_name string comment '企业名称',  -- 青岛小企业年报测试,
+--sbsz_id string comment '申报税种id',  -- 3702040002,
+--sheet_name string comment 'sheet页名称',  -- sheet1,
+--system_id string comment '',  -- 4.98813_e+17
+--   PRIMARY KEY (id,cell_location)
+--)
+--partition by hash(id,cell_location) partitions 14
+--COMMENT '新代账hbase实时同步指标值表 2021第2季度'
+--stored as kudu;
+--
+--
+---------------- 单个副本
+--DROP TABLE IF EXISTS octopus_ods.octopus_qushu_table_narrow_re1_202106;
+--CREATE TABLE  octopus_ods.octopus_qushu_table_narrow_re1_202106 (
+--id string not null comment 'hbase中的rowkey',  -- 840244025863835648_2021_4_778944412830113793_778944412834308097_sheet1,
+--cell_location string not null comment '格子的坐标如A1',
+--cell_is_change string  comment '格子是否变换',
+--cell_value string comment '格子的值',
+--PRIMARY KEY (id,cell_location)
+--)
+---- 分区数不能太多，每个分区最多10g即可
+--partition by hash(id,cell_location) partitions 8
+--COMMENT '新代账hbase实时同步指标值表 2021第2季度'
+--stored as kudu
+--TBLPROPERTIES (
+--'kudu.num_tablet_replicas' = '1'
+--);
+--
+-----------------------------------------
+--
+--DROP TABLE IF EXISTS octopus_ods.octopus_qushu_table_wide_re1_202106;
+--CREATE TABLE  octopus_ods.octopus_qushu_table_wide_re1_202106 (
+--id string not null comment 'hbase中的rowkey',  -- 840244025863835648_2021_4_778944412830113793_778944412834308097_sheet1,
+--cell_location string not null comment '格子的坐标如A1',
+--cell_is_change string  comment '格子是否变换',
+--cell_value string comment '格子的值',
+--area_id string comment '区域id',  -- 0,
+--area_name string comment '区域名称',  --全国,
+--box_id string comment 'boxid', -- 778944412830113793,
+--create_time string comment '创建时间',  -- 2021-05-13215:21:50,
+--dz_qy_id string comment '代账公司id',  -- 722839913816526849,
+--dz_qy_name string comment '代账公司名称',  -- 测试,
+--fetch_data_time bigint comment '取数时间',  -- 1620804083847,
+--kjnd string comment '会计年度',  -- 2021,
+--kjqj string comment '会计期间',  -- 4,
+--nsqxdm string comment '纳税期限代码',  -- 4,
+--parent_box_id string comment '上级boxid',  -- 778941549412327424,
+--qy_id string comment '企业id',  -- 840244025863835648,
+--qy_name string comment '企业名称',  -- 青岛小企业年报测试,
+--sbsz_id string comment '申报税种id',  -- 3702040002,
+--sheet_name string comment 'sheet页名称',  -- sheet1,
+--system_id string comment '',  -- 4.98813_e+17
+--   PRIMARY KEY (id,cell_location)
+--)
+--partition by hash(id,cell_location) partitions 14
+--COMMENT '新代账hbase实时同步指标值表 2021第2季度'
+--stored as kudu
+--TBLPROPERTIES (
+--'kudu.num_tablet_replicas' = '1'
+--)
+--;
+--
+--
+--
+--
+
+
+
+
+-------------- 单个副本 只使用id做hash没有 id 加cell location块
+
+--DROP TABLE IF EXISTS octopus_ods.octopus_qushu_table_nar1;
+--CREATE TABLE  octopus_ods.octopus_qushu_table_nar1 (
+--id string not null comment 'hbase中的rowkey',  -- 840244025863835648_2021_4_778944412830113793_778944412834308097_sheet1,
+--cell_location string not null comment '格子的坐标如A1',
+--kjnd_kjqj string not null comment '会计年度，会计期间，格式2021_6,2021_5',
+--cell_is_change string  comment '格子是否变换',
+--cell_value string comment '格子的值',
+--PRIMARY KEY (id,cell_location,kjnd_kjqj)
+--)
+--partition by hash(id,cell_location,kjnd_kjqj) partitions 2
+--COMMENT '新代账hbase实时同步指标值表'
+--stored as kudu
+--TBLPROPERTIES (
+--'kudu.num_tablet_replicas' = '1'
+--);
+--
+--
+---------------------- 按照时间分区表 宽表
+--DROP TABLE IF EXISTS octopus_ods.octopus_qushu_table_test;
+--CREATE TABLE  octopus_ods.octopus_qushu_table_test (
+--id string not null comment 'hbase中的rowkey',  -- 840244025863835648_2021_4_778944412830113793_778944412834308097_sheet1,
+--area_id string comment '区域id',  -- 0,
+--area_name string comment '区域名称',  --全国,
+--box_id string comment 'boxid', -- 778944412830113793,
+--create_time string comment '创建时间',  -- 2021-05-13215:21:50,
+--dz_qy_id string comment '代账公司id',  -- 722839913816526849,
+--dz_qy_name string comment '代账公司名称',  -- 测试,
+--fetch_data_time bigint comment '取数时间',  -- 1620804083847,
+--kjnd string comment '会计年度',  -- 2021,
+--kjqj string comment '会计期间',  -- 4,
+--nsqxdm string comment '纳税期限代码',  -- 4,
+--parent_box_id string comment '上级boxid',  -- 778941549412327424,
+--qy_id string comment '企业id',  -- 840244025863835648,
+--qy_name string comment '企业名称',  -- 青岛小企业年报测试,
+--sbsz_id string comment '申报税种id',  -- 3702040002,
+--sheet_name string comment 'sheet页名称',  -- sheet1,
+--system_id string comment '',  -- 4.98813_e+17
+--   PRIMARY KEY (id)
+--)
+--partition by hash(id) partitions 6
+--COMMENT '新代账hbase实时同步指标值表 宽表'
+--stored as kudu;
+--
+--
+--DROP TABLE IF EXISTS octopus_ods.octopus_qushu_table_cell_test;
+--CREATE TABLE  octopus_ods.octopus_qushu_table_cell_test (
+--id string not null comment 'hbase中的rowkey',  -- 840244025863835648_2021_4_778944412830113793_778944412834308097_sheet1,
+--cell_location string not null comment '格子的坐标如A1',
+--kjnd_kjqj string not null comment '会计年度，会计期间，格式2021_6,2021_5',
+--cell_is_change string  comment '格子是否变换',
+--cell_value string comment '格子的值',
+--PRIMARY KEY (id,cell_location,kjnd_kjqj)
+--)
+--partition by hash(id,cell_location) partitions 8,
+--range(kjnd_kjqj) (
+--    partition values <= '2021',
+--    partition value = '2021_1',
+--    partition value = '2021_2',
+--    partition value = '2021_3',
+--    partition value = '2021_4',
+--    partition value = '2021_5',
+--    partition value = '2021_6',
+--    partition value = '2021_7',
+--    partition value = '2021_8',
+--    partition value = '2021_9',
+--    partition value = '2021_10',
+--    partition value = '2021_11',
+--    partition value = '2021_12',
+--
+--    partition value = '2022_1',
+--    partition value = '2022_2',
+--    partition value = '2022_3',
+--    partition value = '2022_4',
+--    partition value = '2022_5',
+--    partition value = '2022_6',
+--    partition value = '2022_7',
+--    partition value = '2022_8',
+--    partition value = '2022_9',
+--    partition value = '2022_10',
+--    partition value = '2022_11',
+--    partition value = '2022_12',
+--    partition '2023' <= values
+--)
+--COMMENT '新代账hbase实时同步指标值表'
+--stored as kudu
+--TBLPROPERTIES (
+--'kudu.num_tablet_replicas' = '1'
+--);
+--
+------------
+--
+--
+--DROP TABLE IF EXISTS octopus_ods.octopus_qushu_table_test2;
+--CREATE TABLE  octopus_ods.octopus_qushu_table_test2 (
+--id string not null comment 'hbase中的rowkey',  -- 840244025863835648_2021_4_778944412830113793_778944412834308097_sheet1,
+--area_id string comment '区域id',  -- 0,
+--area_name string comment '区域名称',  --全国,
+--box_id string comment 'boxid', -- 778944412830113793,
+--create_time string comment '创建时间',  -- 2021-05-13215:21:50,
+--dz_qy_id string comment '代账公司id',  -- 722839913816526849,
+--dz_qy_name string comment '代账公司名称',  -- 测试,
+--fetch_data_time bigint comment '取数时间',  -- 1620804083847,
+--kjnd string comment '会计年度',  -- 2021,
+--kjqj string comment '会计期间',  -- 4,
+--nsqxdm string comment '纳税期限代码',  -- 4,
+--parent_box_id string comment '上级boxid',  -- 778941549412327424,
+--qy_id string comment '企业id',  -- 840244025863835648,
+--qy_name string comment '企业名称',  -- 青岛小企业年报测试,
+--sbsz_id string comment '申报税种id',  -- 3702040002,
+--sheet_name string comment 'sheet页名称',  -- sheet1,
+--system_id string comment '',  -- 4.98813_e+17
+--   PRIMARY KEY (id)
+--)
+--partition by hash(id) partitions 21
+--COMMENT '新代账hbase实时同步指标值表 宽表'
+--stored as kudu;
+--
+--
+--DROP TABLE IF EXISTS octopus_ods.octopus_qushu_table_cell_test2;
+--CREATE TABLE  octopus_ods.octopus_qushu_table_cell_test2 (
+--id string not null comment 'hbase中的rowkey',  -- 840244025863835648_2021_4_778944412830113793_778944412834308097_sheet1,
+--kjnd_kjqj string not null comment '会计年度，会计期间，格式2021_6,2021_5',
+--cell_location string not null comment '格子的坐标如A1',
+--cell_is_change string  comment '格子是否变换',
+--cell_value string comment '格子的值',
+--PRIMARY KEY (id,kjnd_kjqj,cell_location)
+--)
+--partition by hash(id) partitions 21,
+--range(kjnd_kjqj) (
+--    partition values <= '2021',
+--    partition value = '2021_1',
+--    partition value = '2021_2',
+--    partition value = '2021_3',
+--    partition value = '2021_4',
+--    partition value = '2021_5',
+--    partition value = '2021_6',
+--    partition value = '2021_7',
+--    partition value = '2021_8',
+--    partition value = '2021_9',
+--    partition value = '2021_10',
+--    partition value = '2021_11',
+--    partition value = '2021_12',
+--
+--    partition value = '2022_1',
+--    partition value = '2022_2',
+--    partition value = '2022_3',
+--    partition value = '2022_4',
+--    partition value = '2022_5',
+--    partition value = '2022_6',
+--    partition value = '2022_7',
+--    partition value = '2022_8',
+--    partition value = '2022_9',
+--    partition value = '2022_10',
+--    partition value = '2022_11',
+--    partition value = '2022_12',
+--    partition '2023' <= values
+--)
+--COMMENT '新代账hbase实时同步指标值表'
+--stored as kudu
+--TBLPROPERTIES (
+--'kudu.num_tablet_replicas' = '1'
+--);
+-- 以svn上表结构为准

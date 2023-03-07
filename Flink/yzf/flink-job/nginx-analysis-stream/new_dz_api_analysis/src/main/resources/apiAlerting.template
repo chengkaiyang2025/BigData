@@ -1,0 +1,5 @@
+# 告警类型：接口调用异常预警
+接口信息：$apiInfo
+返回错误码：$statusCode
+调用次数（统计区间：20s）：$invokeNum
+调用时间：$invokeTime
