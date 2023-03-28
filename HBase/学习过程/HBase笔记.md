@@ -223,9 +223,16 @@ get 'stu2','1001',{COLUMN=>'info1:name',VERSIONS=>4}
 高级知识点,TODO：
 
 - [HFile刷写机制](http://hbasefly.com/tag/hlog/?syzqdi=iyj7s)
+- WAL（类似于CDC中update value，insert valu，确定是空间放大，优点是顺序写）+ memory table + sstable
 
-- HFile的LSM数据结构：
+- HFile的LSM数据结构：https://blog.csdn.net/Shyllin/article/details/124492892
+- LSM:https://lxkaka.wang/rocksdb-lsm/，sstable中用到（字典树+布隆过滤器+Footer） https://segmentfault.com/a/1190000041198407 
+- SStable的合并：Level Style Compaction
 
+- 布隆过滤器
+- 跳跃表
+
+- Kudu：https://www.cnblogs.com/lihaozong2013/p/11857902.html 类似于LSM，不过支持更新，有更新文件作为
 ## 3.2、写原理
 
 ![](img/HBase写流程.png)
