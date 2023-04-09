@@ -20,19 +20,13 @@ public class StatelessTask {
         DataStreamSource<String> s = env.addSource(
                 new WebLogDataGenerator(10, 100, DataGenerateStrategy.RANDOM_NUMBER)
                 , "GenerateWebLogRandomly");
-        s.map(new MapFunction<String, Tuple2<String,Integer>>() {
-                    @Override
-                    public Tuple2<String, Integer> map(String s) throws Exception {
-                        return new Tuple2<>(s,1);
-                    }
-                }).keyBy(new KeySelector<Tuple2<String, Integer>, Object>() {
-                    @Override
-                    public Object getKey(Tuple2<String, Integer> stringIntegerTuple2) throws Exception {
-                        return stringIntegerTuple2.f0;
-                    }
-                })
-                .window(TumblingProcessingTimeWindows.of(Time.seconds(5)))
-                .sum(1).print();
-        env.execute();
+        s.map(new MapFunction<String, String>() {
+            @Override
+            public String map(String s) throws Exception {
+                return "用户"+s.replace(WebLogDataGenerator.WEB_PREFIX,"")
+                        .replace(WebLogDataGenerator.WEB_PREFIX,"")+"访问了:"+s;
+            }
+        }).name("find out which user access the link").print();
+        env.execute("StatelessTask-将访问链接映射为字符串");
     }
 }

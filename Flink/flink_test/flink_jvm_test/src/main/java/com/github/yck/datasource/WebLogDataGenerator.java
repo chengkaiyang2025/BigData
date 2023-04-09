@@ -9,8 +9,8 @@ import java.util.concurrent.TimeUnit;
  * 模拟日志生成流
  */
 public class WebLogDataGenerator implements SourceFunction<String> {
-    private static final String WEB_PREFIX = "http://www.facebook.com/";
-    private static final String WEB_INDEX = ".index";
+    public static final String WEB_PREFIX = "http://www.baidu.com/";
+    public static final String WEB_INDEX = ".index";
 
     /**
      * @param peopleCnt 网站最多有多少用户

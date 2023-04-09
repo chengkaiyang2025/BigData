@@ -37,7 +37,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>com.github.yck.simpletask.StatelessTask</mainClass>
+                            <mainClass>com.github.yck.simpletask.StatefulTask</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
