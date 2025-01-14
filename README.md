@@ -1,4 +1,4 @@
-In the past few years of working experience, I have learned a great deal of knowledge about big data, and I believe it is very important to record what I have learned.
+In the past few years of working experience, I have learned a lot of knowledge about big data, and I believe it is very important to record what I have learned.
 
 The code in this repository includes the use of the following big data tools:
 
